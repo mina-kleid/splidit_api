@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     @user = User.new(permitted_params)
 
     if @user.save
-      render :json => "success"
+      render :json => @user
     else
       render :json => {:errors => @user.errors.full_messages}, :status => 400
     end
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update_attributes(permitted_params)
-      render :json => "success"
+      render :json => @user
     else
       render :json => {:errors => @user.errors.full_messages}, :status => 400
     end
