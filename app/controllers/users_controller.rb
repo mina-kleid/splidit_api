@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
 
+  #TODO this is a simple user api, not ready for use yet
 
   def show
     @user = User.find(params[:id])
@@ -26,6 +27,11 @@ class UsersController < ApplicationController
     else
       render :json => {:errors => @user.errors.full_messages}, :status => 400
     end
+  end
+
+
+  def contacts
+
   end
 
   private

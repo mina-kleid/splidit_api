@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   get "test" => "test#test"
   resources :users, :except => [:destroy,:new,:edit,:index] do
+    member do
+      post "contacts" => "users#contacts"
+    end
       resources :accounts, :except => [:new,:edit,:destroy]
       resources :groups, :except => [:create,:destroy,:new,:edit]
   end

@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
     Request.where(:receiver_id => self.id,:receiver_type => "User")
   end
 
+
   private
 
   def set_key_and_secret

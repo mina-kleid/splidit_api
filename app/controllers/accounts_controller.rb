@@ -1,5 +1,7 @@
 class AccountsController < ApplicationController
 
+  #simple account creation ui
+
   def show
     @account = Account.find(params[:id]) rescue nil
     render :json => @account
