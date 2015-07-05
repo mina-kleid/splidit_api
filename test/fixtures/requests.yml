@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sender_id: 
+  sender_type: Sender
+  receiver_id: 
+  receiver_type: Receiver
+  amount: 
+  status: 
+
+two:
+  sender_id: 
+  sender_type: Sender
+  receiver_id: 
+  receiver_type: Receiver
+  amount: 
+  status: 
