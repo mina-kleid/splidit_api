@@ -28,6 +28,10 @@ class ApplicationController < ActionController::API
     render :json => {:errors => "Unauthorized"}, :status => 401
   end
 
+  def failed_login
+    render json: {errors: "Wrong email/password"},:status => 401
+  end
+
   def wrong_api_key!
     render :json => {:errors => "Wrong api key"}, :status => 401
   end

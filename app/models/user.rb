@@ -31,7 +31,10 @@ class User < ActiveRecord::Base
   end
 
   def authenticate(password)
+    puts password.inspect
     encrypted_password = BCrypt::Engine.hash_secret(password,self.salt)
+    puts encrypted_password
+    puts self.encrypted_password
     encrypted_password == self.encrypted_password
   end
 
