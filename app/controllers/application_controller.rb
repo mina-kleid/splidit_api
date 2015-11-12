@@ -7,10 +7,14 @@ class ApplicationController < ActionController::API
 
   protected
 
+  def check_api_key!
+    api_key = Rails.application.secrets.api_key
+    return params[:api_key].eql?(api_key) ? true : wrong_api_key!
+  end
+
   def authenticate_user!
+    check_api_key!
     token, options = ActionController::HttpAuthentication::Token.token_and_options(request)
-    puts token.inspect
-    puts options.inspect
     user_email = options.blank?? nil : options[:email]
     user = user_email && User.find_by(email: user_email)
     if user && ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, token)
@@ -22,6 +26,14 @@ class ApplicationController < ActionController::API
 
   def unauthenticated!
     render :json => {:errors => "Unauthorized"}, :status => 401
+  end
+
+  def wrong_api_key!
+    render :json => {:errors => "Wrong api key"}, :status => 401
+  end
+
+  def api_error(error)
+    render :json => error, :status => 400
   end
 
   # def run_oauth_check

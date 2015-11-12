@@ -1,11 +1,16 @@
+# require_dependency 'validators/email_validator.rb'
 class User < ActiveRecord::Base
 
-  attr_accessor :name,:email,:phone
-  attr_reader :secret,:key,:balance,:sent_transactions,:received_transactions
+  attr_accessor :password
 
-  before_create :set_key_and_secret
+  before_create :generate_authentication_token,:encrypt_password
 
   has_many :accounts
+
+  validates_presence_of :name,:email,:phone,:password
+  validates_uniqueness_of :email,:phone
+  validates :email, email: true
+  validates_length_of :password, minimum: 6
 
   #TODO for some reason not possible to specify source type and item for has_many without through
 
@@ -25,12 +30,24 @@ class User < ActiveRecord::Base
     Request.where(:receiver_id => self.id,:receiver_type => "User")
   end
 
+  def authenticate(password)
+    encrypted_password = BCrypt::Engine.hash_secret(password,self.salt)
+    encrypted_password == self.encrypted_password
+  end
 
   private
 
-  def set_key_and_secret
-    self[:secret] = OAuth::Helper.generate_key(40)[0,40]
-    self[:key] = OAuth::Helper.generate_key(40)[0,40]
+  def generate_authentication_token
+    loop do
+      self[:authentication_token] = SecureRandom.base64(64)
+      break unless User.find_by(authentication_token: authentication_token)
+    end
+  end
+
+  def encrypt_password
+    salt = BCrypt::Engine.generate_salt
+    self[:encrypted_password] = BCrypt::Engine.hash_secret(@password, salt)
+    self[:salt] = salt
   end
 
 end

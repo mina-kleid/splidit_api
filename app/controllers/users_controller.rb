@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
 
-
-  #TODO this is a simple user api, not ready for use yet
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => :create
+  before_filter :check_api_key!, :only => :create
 
   def show
     @user = User.find(params[:id])
@@ -11,22 +10,19 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(permitted_params)
-
     if @user.save
-      render :json => @user
-    else
-      render :json => {:errors => @user.errors.full_messages}, :status => 400
+      render :json => @user, status: 200 and return
     end
-
+    return api_error(@user.errors.full_messages)
   end
 
   def update
     @user = User.find(params[:id])
 
     if @user.update_attributes(permitted_params)
-      render :json => @user
+      render :json => @user and return
     else
-      render :json => {:errors => @user.errors.full_messages}, :status => 400
+      render :json => {:errors => @user.errors.full_messages}, :status => 400 and return
     end
   end
 
@@ -38,7 +34,7 @@ class UsersController < ApplicationController
   private
 
   def permitted_params
-    params.require(:user).permit(:name,:email,:phone)
+    params.require(:user).permit(:name,:email,:phone,:password)
   end
 
 end
