@@ -1,4 +1,4 @@
-class TestController  < ApplicationController
+class Api::V1::TestController  < ApplicationController
 
   #this is a test controller to check the availability of the server
 

@@ -1,4 +1,4 @@
-class AccountsController < ApplicationController
+class Api::V1AccountsController < ApplicationController
 
   #simple account creation ui
 
