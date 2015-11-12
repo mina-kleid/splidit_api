@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
 
   #TODO this is a simple user api, not ready for use yet
+  before_filter :authenticate_user!
 
   def show
     @user = User.find(params[:id])
