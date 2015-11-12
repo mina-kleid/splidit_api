@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get "test" => "test#test"
+      get "test_api" => "test#test_api"
       resources :users, :except => [:destroy,:new,:edit,:index] do
         member do
           post "contacts" => "users#contacts"
