@@ -7,13 +7,13 @@ class ApplicationController < ActionController::API
 
   protected
 
-  def check_api_key!
+  def authenticate_api_key!
     api_key = Rails.application.secrets.api_key
     return params[:api_key].eql?(api_key) ? true : wrong_api_key!
   end
 
   def authenticate_user!
-    check_api_key!
+    authenticate_api_key!
     token, options = ActionController::HttpAuthentication::Token.token_and_options(request)
     user_email = options.blank?? nil : options[:email]
     user = user_email && User.find_by(email: user_email)

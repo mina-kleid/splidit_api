@@ -1,6 +1,6 @@
 class Api::V1::SessionsController < ApplicationController
 
-  before_filter :check_api_key!
+  before_filter :authenticate_api_key!
 
   def create
     @user = User.find_by_email(permitted_params[:email])

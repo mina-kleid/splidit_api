@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
 
   before_filter :authenticate_user!, :except => :create
-  before_filter :check_api_key!, :only => :create
+  before_filter :authenticate_api_key!, :only => :create
 
   def show
     @user = User.find(params[:id])

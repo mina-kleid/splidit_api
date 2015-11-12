@@ -1,7 +1,7 @@
 class Api::V1::TestController  < ApplicationController
 
   #this is a test controller to check the availability of the server
-  before_filter :check_api_key! , :only => :test_api
+  before_filter :authenticate_api_key! , :only => :test_api
 
 
   def test
