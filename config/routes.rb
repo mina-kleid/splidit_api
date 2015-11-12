@@ -4,15 +4,19 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-  get "test" => "test#test"
-  resources :users, :except => [:destroy,:new,:edit,:index] do
-    member do
-      post "contacts" => "users#contacts"
+  namespace :api do
+    namespace :v1 do
+      get "test" => "test#test"
+      resources :users, :except => [:destroy,:new,:edit,:index] do
+        member do
+          post "contacts" => "users#contacts"
+        end
+          resources :accounts, :except => [:new,:edit,:destroy]
+          resources :groups, :except => [:create,:destroy,:new,:edit]
+      end
+      resources :groups, :only => [:create,:destroy]
     end
-      resources :accounts, :except => [:new,:edit,:destroy]
-      resources :groups, :except => [:create,:destroy,:new,:edit]
   end
-  resources :groups, :only => [:create,:destroy]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
