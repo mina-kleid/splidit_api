@@ -5,13 +5,16 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    render :json => @user
+    if authorize_user?(@user)
+      render :json => @user,serializer: UserSerializer and return
+    end
+    return unauthorized!
   end
 
   def create
     @user = User.new(permitted_params)
     if @user.save
-      render :json => @user, status: 200 and return
+      render :json => @user,serializer: UserSerializer, status: 200 and return
     end
     return api_error(@user.errors.full_messages)
   end

@@ -1,26 +1,32 @@
-class Api::V1AccountsController < ApplicationController
+class Api::V1::AccountsController < ApplicationController
 
   #simple account creation ui
+  before_filter :authenticate_user!
 
   def show
-    @account = Account.find(params[:id]) rescue nil
-    render :json => @account
+    @user = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
+    @account = @user.accounts.find(params[:id])
+    render :json => @account,serializer: AccountSerializer
   end
 
   def index
     @user = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
     @accounts = @user.accounts
+    render :json => @accounts,each_serializer: AccountSerializer
   end
 
   def create
     @user = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
     @account = Account.new(permitted_params)
-    @account.user = user
+    @account.user = @user
     if @account.save
-      render :json => "success"
-    else
-      render :json => {:errors => @account.errors.full_messages}, :status => 400
+      render :json => @account,serializer: AccountSerializer, :status => 200 and return
+
     end
+    return api_error(@account.errors.full_messages)
   end
 
   def update

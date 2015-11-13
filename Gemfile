@@ -1,21 +1,22 @@
 source 'https://rubygems.org'
 
 
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.0'
 
 gem 'rails-api'
 
-gem 'spring', :group => :development
+# gem 'spring', :group => :development
 
 
 gem 'pg'
 
-gem 'active_model_serializers','0.8.0'
+gem 'active_model_serializers','~>0.9.2'
 
 # gem 'oauth'
 
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'email_validator'
+gem 'iban-tools'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

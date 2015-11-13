@@ -1,11 +1,23 @@
 # require 'oauth/request_proxy/rack_request'
 class ApplicationController < ActionController::API
 
+  include ActionController::Serialization
     #commented to stop oauth from working
     # before_filter :run_oauth_check
 
 
   protected
+
+  def current_user
+    @current_user
+  end
+
+  def authorize_user?(user)
+    if current_user and current_user.eql?(user)
+      return true
+    end
+    return false
+  end
 
   def authenticate_api_key!
     api_key = Rails.application.secrets.api_key
@@ -14,10 +26,10 @@ class ApplicationController < ActionController::API
 
   def authenticate_user!
     authenticate_api_key!
-    token, options = ActionController::HttpAuthentication::Token.token_and_options(request)
+    token, options = ::ActionController::HttpAuthentication::Token.token_and_options(request)
     user_email = options.blank?? nil : options[:email]
     user = user_email && User.find_by(email: user_email)
-    if user && ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, token)
+    if user && ::ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, token)
       @current_user = user
     else
       return unauthenticated!
@@ -25,6 +37,10 @@ class ApplicationController < ActionController::API
   end
 
   def unauthenticated!
+    render :json => {:errors => "Unauthorized"}, :status => 401
+  end
+
+  def unauthorized!
     render :json => {:errors => "Unauthorized"}, :status => 401
   end
 
