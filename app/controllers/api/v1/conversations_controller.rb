@@ -20,6 +20,11 @@ class Api::V1::ConversationsController < ApplicationController
     @user = User.find(params[:user_id])
     return unauthorized! unless current_user.eql?(@user)
     @second_user = User.find(permitted_params[:user_id])
+    conversation_ids = @user.conversations.where("user1_id = ? or user2_id = ?",@second_user.id,@second_user.id).pluck(:id)
+    if conversation_ids.any?
+      @conversation = Conversation.find(conversation_ids.first)
+      render :json => @conversation and return
+    end
     @conversation = Conversation.new(:first_user => @user,:second_user => @second_user)
     if @conversation.save
       render :json => @conversation and return

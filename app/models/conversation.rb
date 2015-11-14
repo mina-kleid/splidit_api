@@ -4,5 +4,6 @@ class Conversation < ActiveRecord::Base
   belongs_to :second_user,:foreign_key => "user2_id",:class_name => "User"
 
   validates_presence_of :first_user,:second_user
+  validates_uniqueness_of :user1_id, :scope => [:user2_id],:message => "Conversation already exists"
 
 end
