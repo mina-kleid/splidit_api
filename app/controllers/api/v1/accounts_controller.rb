@@ -31,18 +31,43 @@ class Api::V1::AccountsController < ApplicationController
 
   def update
     @user = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
     @account = @user.accounts.find(params[:id])
     if @account.update_attributes(permitted_params)
-      render :json  => "success"
-    else
-      render :json => {:errors => @account.errors.full_messages}, :status => 400
+      render :json  => @account, serializer: AccountSerializer and return
     end
+    return api_error(@account.errors.full_messages)
+
+  end
+
+  def withdraw
+    @user  = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
+    @account = @user.accounts.find(params[:id])
+    if @account.withdraw(transaction_params[:amount])
+      render :json => @user,serializer: UserSerializer and return
+    end
+    return api_error("Transaction didnt work")
+  end
+
+  def deposit
+    @user  = User.find(params[:user_id])
+    return unauthorized! unless authorize_user?(@user)
+    @account = @user.accounts.find(params[:id])
+    if @account.deposit(transaction_params[:amount])
+      render :json => @user,serializer: UserSerializer and return
+    end
+    return api_error("Transaction didnt work")
   end
 
   private
 
   def permitted_params
     params.require(:account).permit(:iban,:bic,:account_name)
+  end
+
+  def transaction_params
+    params.require(:account).permit(:amount)
   end
 
 end

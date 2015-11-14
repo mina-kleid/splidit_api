@@ -13,7 +13,12 @@ Rails.application.routes.draw do
         member do
           post "contacts" => "users#contacts"
         end
-          resources :accounts, :except => [:new,:edit,:destroy]
+          resources :accounts, :except => [:new,:edit,:destroy] do
+            member do
+              post "withdraw" => "accounts#withdraw"
+              post "deposit" => "accounts#deposit"
+            end
+          end
           resources :groups, :except => [:create,:destroy,:new,:edit]
       end
       resources :groups, :only => [:create,:destroy]

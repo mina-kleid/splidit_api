@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151114110542) do
+ActiveRecord::Schema.define(version: 20151114114214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20151114110542) do
   create_table "groups", force: :cascade do |t|
     t.string   "name",           limit: 255
     t.integer  "type"
-    t.decimal  "balance",                    precision: 15, scale: 10
+    t.decimal  "balance",                    precision: 15, scale: 10, default: 0.0
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 20151114110542) do
     t.string   "email",                limit: 255
     t.string   "secret",               limit: 255
     t.string   "key",                  limit: 255
-    t.decimal  "balance",                          precision: 15, scale: 10
+    t.decimal  "balance",                          precision: 15, scale: 10, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "phone",                limit: 255
