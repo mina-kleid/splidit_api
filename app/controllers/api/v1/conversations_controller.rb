@@ -6,14 +6,14 @@ class Api::V1::ConversationsController < ApplicationController
     @user = User.find(params[:user_id])
     return unauthorized! unless current_user.eql?(@user)
     @conversation = @user.conversations.find(params[:id])
-    render :json => @conversation
+    render :json => @conversation,show_all_posts: true
   end
 
   def index
     @user = User.find(params[:user_id])
     return unauthorized! unless current_user.eql?(@user)
     @conversations = @user.conversations
-    render :json => @conversations
+    render :json => @conversations,show_all_posts: false
   end
 
   def create
