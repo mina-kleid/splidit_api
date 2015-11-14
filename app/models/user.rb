@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   validates :email, email: true
   validates_length_of :password, minimum: 6
 
+  def conversations
+    Conversation.where("user1_id = ? or user2_id = ?",self.id,self.id)
+  end
+
   def sent_requests
     Request.where(:sender_id => self.id,:sender_type => "User")
   end

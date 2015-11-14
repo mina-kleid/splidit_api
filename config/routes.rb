@@ -10,18 +10,15 @@ Rails.application.routes.draw do
       get "test_api" => "test#test_api"
       resources :sessions, only: :create
       resources :users, :except => [:destroy,:new,:edit,:index] do
-        member do
-          post "contacts" => "users#contacts"
-        end
-          resources :accounts, :except => [:new,:edit,:destroy] do
-            member do
-              post "withdraw" => "accounts#withdraw"
-              post "deposit" => "accounts#deposit"
-            end
+        resources :conversations, :except => [:new,:edit,:destroy]
+        resources :accounts, :except => [:new,:edit,:destroy] do
+          member do
+            post "withdraw" => "accounts#withdraw"
+            post "deposit" => "accounts#deposit"
           end
-          resources :groups, :except => [:create,:destroy,:new,:edit]
+        end
+        resources :groups, :except => [:create,:destroy,:new,:edit]
       end
-      resources :groups, :only => [:create,:destroy]
     end
   end
   # Example of regular route:
