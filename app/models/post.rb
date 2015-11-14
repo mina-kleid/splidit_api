@@ -4,5 +4,5 @@ class Post < ActiveRecord::Base
 
   enum post_type: [:debit,:credit,:text]
 
-  validates_presence_of :user,:target
+  validates_presence_of :user,:target,:text
 end

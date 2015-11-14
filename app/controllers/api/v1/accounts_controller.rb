@@ -26,7 +26,7 @@ class Api::V1::AccountsController < ApplicationController
       render :json => @account,serializer: AccountSerializer, :status => 200 and return
 
     end
-    return api_error(@account.errors.full_messages)
+    return api_error(@account.errors.messages)
   end
 
   def update
@@ -36,7 +36,7 @@ class Api::V1::AccountsController < ApplicationController
     if @account.update_attributes(permitted_params)
       render :json  => @account, serializer: AccountSerializer and return
     end
-    return api_error(@account.errors.full_messages)
+    return api_error(@account.errors.messages)
 
   end
 

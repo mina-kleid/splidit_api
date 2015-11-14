@@ -15,7 +15,7 @@ class Api::V1::PostsController < ApplicationController
     if @post.save
       render :json => @post and return
     end
-    return api_error(@post.errors.full_messages)
+    return api_error(@post.errors.messages)
   end
 
 

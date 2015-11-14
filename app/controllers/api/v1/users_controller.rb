@@ -16,7 +16,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.save
       render :json => @user,serializer: UserSerializer, status: 200 and return
     end
-    return api_error(@user.errors.full_messages)
+    return api_error(@user.errors.messages)
   end
 
   def update
@@ -25,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.update_attributes(permitted_params)
       render :json => @user and return
     else
-      render :json => {:errors => @user.errors.full_messages}, :status => 400 and return
+      render :json => {:errors => @user.errors.messages}, :status => 400 and return
     end
   end
 

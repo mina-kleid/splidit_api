@@ -29,14 +29,28 @@ class Api::V1::ConversationsController < ApplicationController
     if @conversation.save
       render :json => @conversation and return
     end
-    return api_error(@conversation.errors.full_messages)
+    return api_error(@conversation.errors.messages)
+  end
+
+  def transaction
+    @user = User.find(params[:user_id])
+    return unauthorized! unless @user.eql?(current_user)
+    @other_user = User.find(permitted_params[:user_id])
+    amount = params[:amount]
+    TransactionServiceObject.create(@user,@other_user,amount)
+    @post = Post.new(:user => @user,:target => @other_user,:text => "#{@user.name} sent #{amount} to #{@other_user.name}")
+    if @post.save
+      render :json =>:post.merge(@user) and return
+    end
+    return api_error(@post.errors.messages)
+
   end
 
 
   private
 
   def permitted_params
-    params.require(:conversation).permit(:user_id)
+    params.require(:conversation).permit(:user_id,:amount)
   end
 
 end

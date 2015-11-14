@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       resources :users, :except => [:destroy,:new,:edit,:index] do
         resources :conversations, :except => [:new,:edit,:destroy] do
           resources :posts, :only => :create
+          post "transaction" => "conversations#transaction"
+          # post "request" => "conversations#request"
         end
         resources :accounts, :except => [:new,:edit,:destroy] do
           member do
