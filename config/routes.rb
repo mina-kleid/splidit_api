@@ -10,7 +10,9 @@ Rails.application.routes.draw do
       get "test_api" => "test#test_api"
       resources :sessions, only: :create
       resources :users, :except => [:destroy,:new,:edit,:index] do
-        resources :conversations, :except => [:new,:edit,:destroy]
+        resources :conversations, :except => [:new,:edit,:destroy] do
+          resources :posts, :only => :create
+        end
         resources :accounts, :except => [:new,:edit,:destroy] do
           member do
             post "withdraw" => "accounts#withdraw"

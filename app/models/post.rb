@@ -1,6 +1,8 @@
 class Post < ActiveRecord::Base
-  belongs_to :author, polymorphic: true
+  belongs_to :user
+  belongs_to :target, :polymorphic => true
 
-  attr_accessor :type,:content
+  enum post_type: [:debit,:credit,:text]
 
+  validates_presence_of :user,:target
 end

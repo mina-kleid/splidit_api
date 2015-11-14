@@ -2,12 +2,12 @@
 
 one:
   author_id: 
-  author_type: Author
-  type: 1
-  content: MyText
+  target: 
+  text: MyString
+  post_type: 1
 
 two:
   author_id: 
-  author_type: Author
-  type: 1
-  content: MyText
+  target: 
+  text: MyString
+  post_type: 1

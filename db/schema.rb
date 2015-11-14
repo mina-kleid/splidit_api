@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151114114214) do
+ActiveRecord::Schema.define(version: 20151114140327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,16 +48,17 @@ ActiveRecord::Schema.define(version: 20151114114214) do
   add_index "groups", ["creator_id"], name: "index_groups_on_creator_id", using: :btree
 
   create_table "posts", force: :cascade do |t|
-    t.integer  "target_id"
-    t.string   "target_type", limit: 255
-    t.integer  "type"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.string   "text"
+    t.integer  "post_type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  add_index "posts", ["target_id", "target_type"], name: "index_posts_on_target_id_and_target_type", using: :btree
+  add_index "posts", ["target_type", "target_id"], name: "index_posts_on_target_type_and_target_id", using: :btree
+  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
     t.integer  "sender_id"
@@ -114,4 +115,5 @@ ActiveRecord::Schema.define(version: 20151114114214) do
     t.string   "salt",                 limit: 255
   end
 
+  add_foreign_key "posts", "users"
 end
