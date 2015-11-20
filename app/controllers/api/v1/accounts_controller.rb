@@ -34,16 +34,16 @@ class Api::V1::AccountsController < ApplicationController
 
   def withdraw
     @account = current_user.accounts.find(params[:id])
-    if @account.withdraw(withdraw_params[:amount])
-      render :json => current_user,serializer: UserSerializer and return
+    if @account.withdraw(transaction_params[:amount])
+      render :json => {:balance => current_user.balance} and return
     end
     return api_error("Transaction didnt work")
   end
 
   def deposit
     @account = current_user.accounts.find(params[:id])
-    if @account.deposit(deposit[:amount])
-      render :json => current_user,serializer: UserSerializer and return
+    if @account.deposit(transaction_params[:amount])
+      render :json => {:balance => current_user.balance} and return
     end
     return api_error("Transaction didnt work")
   end
@@ -56,11 +56,8 @@ class Api::V1::AccountsController < ApplicationController
     params.require(:account).permit(:iban,:bic,:account_name)
   end
 
-  def deposit_params
-    params.require(:deposit).permit(:amount)
-  end
-  def withdraw_params
-    params.require(:withdraw).permit(:amount)
+  def transaction_params
+    params.require(:transaction).permit(:amount)
   end
 
 end
