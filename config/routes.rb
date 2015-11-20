@@ -10,18 +10,25 @@ Rails.application.routes.draw do
       get "test_api" => "test#test_api"
       resources :sessions, only: :create
       resources :users, :except => [:destroy,:new,:edit,:index] do
-        resources :conversations, :except => [:new,:edit,:destroy] do
-          resources :posts, :only => :create
-          post "transaction" => "conversations#transaction"
-          # post "request" => "conversations#request"
+        # resources :conversations, :except => [:new,:edit,:destroy] do
+        #   resources :posts, :only => :create
+        #   post "transaction" => "conversations#transaction"
+        #   # post "request" => "conversations#request"
+        # end
+        # resources :groups, :except => [:create,:destroy,:new,:edit]
+      end
+
+      resources :conversations, :except => [:new,:edit,:destroy] do
+        resources :posts, :only => :create
+        post "transaction" => "conversations#transaction"
+        # post "request" => "conversations#request"
+      end
+
+      resources :accounts, :except => [:new,:edit,:destroy] do
+        member do
+          post "withdraw" => "accounts#withdraw"
+          post "deposit" => "accounts#deposit"
         end
-        resources :accounts, :except => [:new,:edit,:destroy] do
-          member do
-            post "withdraw" => "accounts#withdraw"
-            post "deposit" => "accounts#deposit"
-          end
-        end
-        resources :groups, :except => [:create,:destroy,:new,:edit]
       end
     end
   end
