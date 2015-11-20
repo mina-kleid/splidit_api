@@ -5,7 +5,7 @@ class Api::V1::SessionsController < ApplicationController
   def create
     @user = User.find_by_email(permitted_params[:email])
     if @user and @user.authenticate(permitted_params[:password])
-      render json: @user and return
+      render json: {:token =>@user.authentication_token }and return
     end
     return failed_login
   end

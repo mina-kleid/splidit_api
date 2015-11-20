@@ -14,7 +14,7 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.new(permitted_params)
     if @user.save
-      render :json => @user,serializer: UserSerializer, status: 200 and return
+      render :json => {:token => @user.authentication_token} and return
     end
     return api_error(@user.errors.messages)
   end
