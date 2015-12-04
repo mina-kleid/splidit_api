@@ -7,4 +7,8 @@ class Conversation < ActiveRecord::Base
   validates_presence_of :first_user,:second_user
   validates_uniqueness_of :user1_id, :scope => [:user2_id],:message => "Conversation already exists"
 
+  def users
+    return [first_user , second_user]
+  end
+
 end

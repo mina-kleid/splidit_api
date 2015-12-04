@@ -20,7 +20,8 @@ Rails.application.routes.draw do
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :posts, :only => :create
-        post "transaction" => "conversations#transaction"
+        resources :transactions, :only => :create
+        # post "transaction" => "conversations#transaction"
         # post "request" => "conversations#request"
       end
 

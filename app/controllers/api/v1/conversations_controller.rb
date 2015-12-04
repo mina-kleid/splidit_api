@@ -26,23 +26,11 @@ class Api::V1::ConversationsController < ApplicationController
     return api_error(@conversation.errors.messages)
   end
 
-  def transaction
-    @other_user = User.find(permitted_params[:user_id])
-    amount = params[:amount]
-    TransactionServiceObject.create(current_user,@other_user,amount)
-    @post = Post.new(:user => current_user,:target => @other_user,:text => "#{current_user.name} sent #{amount} to #{@other_user.name}")
-    if @post.save
-      render :json =>:post.merge(current_user) and return
-    end
-    return api_error(@post.errors.messages)
-
-  end
-
 
   private
 
   def permitted_params
-    params.require(:conversation).permit(:user_id,:amount)
+    params.require(:conversation).permit(:user_id)
   end
 
 end
