@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
 
   has_many :accounts
   has_many :transactions,:as => :source
+  has_many :source_requests, :as => :source,:class_name => "Request"
+  has_many :target_requests, :as => :target,:class_name => "Request"
 
   validates_presence_of :name,:email,:phone,:password
   validates_uniqueness_of :email,:phone

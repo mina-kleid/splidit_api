@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151114163243) do
+ActiveRecord::Schema.define(version: 20151204103905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,19 +61,16 @@ ActiveRecord::Schema.define(version: 20151114163243) do
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
-    t.integer  "sender_id"
-    t.string   "sender_type",       limit: 255
-    t.integer  "receiver_id"
-    t.string   "receiver_type",     limit: 255
-    t.decimal  "amount",                        precision: 15, scale: 10
+    t.decimal  "amount",            precision: 15, scale: 10
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "status_changed_at"
+    t.integer  "source_id"
+    t.string   "source_type"
+    t.integer  "target_id"
+    t.string   "target_type"
   end
-
-  add_index "requests", ["receiver_id", "receiver_type"], name: "index_requests_on_receiver_id_and_receiver_type", using: :btree
-  add_index "requests", ["sender_id", "sender_type"], name: "index_requests_on_sender_id_and_sender_type", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.decimal  "amount",           precision: 15, scale: 10

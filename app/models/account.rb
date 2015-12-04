@@ -7,11 +7,11 @@ class Account < ActiveRecord::Base
   after_validation :validate_iban
 
   def deposit(amount)
-    ::TransactionServiceObject.create(self.user,self,amount)
+    ::AccountTransactionServiceObject.deposit_to_account(self,self.user,amount)
   end
 
   def withdraw(amount)
-    ::TransactionServiceObject.create(self,self.user,amount)
+    ::AccountTransactionServiceObject.withdraw_from_account(self,self.user,amount)
   end
 
   private
