@@ -1,7 +1,7 @@
 class Request < ActiveRecord::Base
-  belongs_to :sender, polymorphic: true
-  belongs_to :receiver, polymorphic: true
+  belongs_to :source, polymorphic: true
+  belongs_to :target, polymorphic: true
 
-  attr_accessor :sender,:receiver,:status,:amount
+  enum status: [:accepted,:pending,:rejected]
 
 end
