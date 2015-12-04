@@ -8,7 +8,7 @@ class Api::V1::TransactionsController < ApplicationController
     amount = permitted_params[:amount].to_d
     success, result = TransactionServiceObject.create(current_user, other_user, amount, conversation)
     if success
-      render :json => {:post => PostSerializer.new(result), :user => {:balance => current_user.balance}} and return
+      render :json => {:post => PostSerializer.new(result), :user => {:balance => current_user.balance}},:root => false and return
     end
     return api_error(result)
     #TODO handle errors

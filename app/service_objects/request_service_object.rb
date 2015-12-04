@@ -7,7 +7,7 @@ class RequestServiceObject
       request.save
       post.save
     end
-    return post
+    return [post,request]
   end
 
   def self.accept(request, post_target)

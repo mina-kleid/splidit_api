@@ -11,8 +11,8 @@ class Api::V1::RequestsController < ApplicationController
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.users.where("id != ?",current_user.id).first
     amount = permitted_params[:amount].to_d
-    post = RequestServiceObject.create(current_user,other_user,amount,conversation)
-    render :json => post and return
+    post,request = RequestServiceObject.create(current_user,other_user,amount,conversation)
+    render :json => {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false and return
     #TODO show errors from request
   end
 
@@ -21,7 +21,7 @@ class Api::V1::RequestsController < ApplicationController
     conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",@request.source_id,@request.source_id).first
     success, result = RequestServiceObject.accept(@request,conversation)
     if success
-      render :json => {:post => PostSerializer.new(result),:user => {:balance => current_user.balance}} and return
+      render :json => {:post => PostSerializer.new(result),:user => {:balance => current_user.balance}},:root => false and return
     end
     return api_error(result)
   end
@@ -31,7 +31,7 @@ class Api::V1::RequestsController < ApplicationController
     conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",@request.source_id,@request.source_id).first
     success, result = RequestServiceObject.reject(@request,conversation)
     if success
-      render :json => {:post => PostSerializer.new(result),:user => {:balance => current_user.balance}} and return
+      render :json => {:post => PostSerializer.new(result),:user => {:balance => current_user.balance}},:root => false and return
     end
     return api_error(result)
     #TODO handle errors
