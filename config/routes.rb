@@ -8,15 +8,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "test" => "test#test"
       get "test_api" => "test#test_api"
+      get "me" => "users#show"
       resources :sessions, only: :create
-      resources :users, :except => [:destroy,:new,:edit,:index] do
-        # resources :conversations, :except => [:new,:edit,:destroy] do
-        #   resources :posts, :only => :create
-        #   post "transaction" => "conversations#transaction"
-        #   # post "request" => "conversations#request"
-        # end
-        # resources :groups, :except => [:create,:destroy,:new,:edit]
-      end
+      resources :users, :only => [:update,:create,:show]
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :posts, :only => :create
@@ -26,9 +20,11 @@ Rails.application.routes.draw do
         # post "request" => "conversations#request"
       end
 
-      resources :transactions do
-        post "accept" => "transactions#accept"
-        post "reject" => "transactions#reject"
+      resources :requests, :only =>[:index] do
+        member do
+          post "accept" => "requests#accept"
+          post "reject" => "requests#reject"
+        end
 
       end
 

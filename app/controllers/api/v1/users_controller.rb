@@ -4,11 +4,7 @@ class Api::V1::UsersController < ApplicationController
   before_filter :authenticate_api_key!, :only => :create
 
   def show
-    @user = User.find(params[:id])
-    if authorize_user?(@user)
-      render :json => @user,serializer: UserSerializer and return
-    end
-    return unauthorized!
+    render :json => current_user,serializer: UserSerializer and return
   end
 
   def create

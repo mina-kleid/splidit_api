@@ -53,7 +53,7 @@ class ApplicationController < ActionController::API
   end
 
   def api_error(error)
-    render :json => error, :status => 400
+    render :json => {:errors =>error}, :status => 400
   end
 
   # def run_oauth_check

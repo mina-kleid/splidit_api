@@ -34,7 +34,8 @@ class Api::V1::AccountsController < ApplicationController
 
   def withdraw
     @account = current_user.accounts.find(params[:id])
-    if @account.withdraw(transaction_params[:amount].to_d)
+    result = AccountTransactionServiceObject.withdraw_from_account(@account,current_user,transaction_params[:amount].to_d)
+    if result
       render :json => {:balance => current_user.balance} and return
     end
     return api_error("Transaction didnt work")
@@ -42,10 +43,11 @@ class Api::V1::AccountsController < ApplicationController
 
   def deposit
     @account = current_user.accounts.find(params[:id])
-    if @account.deposit(transaction_params[:amount].to_d)
+    result = AccountTransactionServiceObject.deposit_to_account(@account,current_user,transaction_params[:amount].to_d)
+    if result
       render :json => {:balance => current_user.balance} and return
     end
-    return api_error("Transaction didnt work")
+    return api_error("Insufficient funds")
   end
 
 
