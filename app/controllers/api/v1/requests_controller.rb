@@ -9,10 +9,9 @@ class Api::V1::RequestsController < ApplicationController
 
   def create
     conversation = current_user.conversations.find(params[:conversation_id])
-    @other_user = conversation.users.find(permitted_params[:user_id])
-    return api_error(:user => "Wrong user") if @other_user.eql?(current_user)
+    other_user = conversation.users.delete(current_user).first
     amount = permitted_params[:amount].to_d
-    post = RequestServiceObject.create(current_user,@other_user,amount,conversation)
+    post = RequestServiceObject.create(current_user,other_user,amount,conversation)
     render :json => post and return
     #TODO show errors from request
   end
@@ -43,7 +42,7 @@ class Api::V1::RequestsController < ApplicationController
 
 
   def permitted_params
-    params.require(:request).permit(:user_id,:amount)
+    params.require(:request).permit(:amount)
   end
 
 end
