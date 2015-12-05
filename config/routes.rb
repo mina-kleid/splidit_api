@@ -16,6 +16,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :contacts,:only => [] do
+        collection do
+          post "sync" => "contacts#sync"
+        end
+
+      end
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :posts, :only => :create

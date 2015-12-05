@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   attr_accessor :password
 
   before_create :generate_authentication_token,:encrypt_password
+  before_validation :modify_phone_number
 
   has_many :accounts
   has_many :transactions,:as => :source
@@ -11,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :target_requests, :as => :target,:class_name => "Request"
 
   validates_presence_of :name,:email,:phone,:password
+  validates :phone, phone: { possible: true, types: [:mobile] }
   validates_uniqueness_of :email,:phone
   validates :email, email: true
   validates_length_of :password, minimum: 6
@@ -36,6 +38,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def modify_phone_number
+    self[:phone] = Phonelib.parse(self.phone).international
+  end
 
   def generate_authentication_token
     loop do

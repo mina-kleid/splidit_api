@@ -32,11 +32,9 @@ class Api::V1::UsersController < ApplicationController
     return api_error(:user =>{:device_token => "Device token couldnt be updated"})
   end
 
-  def contacts
-
-  end
 
   private
+
 
   def permitted_params
     params.require(:user).permit(:name,:email,:phone,:password)
