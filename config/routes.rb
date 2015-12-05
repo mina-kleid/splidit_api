@@ -8,9 +8,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "test" => "test#test"
       get "test_api" => "test#test_api"
-      get "me" => "users#show"
       resources :sessions, only: :create
-      resources :users, :only => [:update,:create,:show]
+      resources :users, :only => [:create] do
+        collection do
+          get "me" => "users#show"
+          post "device_token" => "users#device_token"
+        end
+      end
+
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :posts, :only => :create
