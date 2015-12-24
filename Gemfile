@@ -18,6 +18,7 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'email_validator'
 gem 'iban-tools'
 gem 'phonelib'
+gem 'apns'
 
 gem 'rails_12factor', group: :production
 # To use ActiveModel has_secure_password
