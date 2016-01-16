@@ -4,7 +4,7 @@ class TransactionServiceObject
     if source.balance - amount > 0
       debit_transaction = Transaction.new(:source => source,:target => target,:amount => amount,:transaction_type => Transaction.transaction_types[:debit])
       credit_transaction = Transaction.new(:source => target,:target => source,:amount => amount,:transaction_type => Transaction.transaction_types[:credit])
-      post = Post.new(:user => source,:target => post_target,:text => "#{source.name} sent #{amount} to #{target.name}",:post_type => Post.post_types[:text]) if post_target.present?
+      post = Post.new(:user => source,:target => post_target,:text => "#{amount}",:post_type => Post.post_types[:transaction]) if post_target.present?
       Transaction.transaction do
         debit_transaction.save
         credit_transaction.save
