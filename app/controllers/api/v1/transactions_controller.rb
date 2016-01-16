@@ -5,7 +5,7 @@ class Api::V1::TransactionsController < ApplicationController
   def create
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.users.where("id != ?",current_user.id).first
-    amount = permitted_params[:amount].to_d
+    amount = permitted_params[:amount].to_d.abs
     success, result = TransactionServiceObject.create(current_user, other_user, amount, conversation)
     if success
       render :json => {:post => PostSerializer.new(result), :user => {:balance => current_user.balance}},:root => false and return

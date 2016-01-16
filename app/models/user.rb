@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email,:phone
   validates :email, email: true
   validates_length_of :password, minimum: 6
+  validates :balance, :numericality => { :greater_than_or_equal_to => 0 }
 
   def conversations
     Conversation.where("user1_id = ? or user2_id = ?",self.id,self.id)

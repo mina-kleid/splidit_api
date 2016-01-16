@@ -34,7 +34,7 @@ class Api::V1::AccountsController < ApplicationController
 
   def withdraw
     @account = current_user.accounts.find(params[:id])
-    result = AccountTransactionServiceObject.withdraw_from_account(@account,current_user,transaction_params[:amount].to_d)
+    result = AccountTransactionServiceObject.withdraw_from_account(@account,current_user,transaction_params[:amount].to_d.abs)
     if result
       render :json => {:balance => current_user.balance} and return
     end
@@ -43,7 +43,7 @@ class Api::V1::AccountsController < ApplicationController
 
   def deposit
     @account = current_user.accounts.find(params[:id])
-    result = AccountTransactionServiceObject.deposit_to_account(@account,current_user,transaction_params[:amount].to_d)
+    result = AccountTransactionServiceObject.deposit_to_account(@account,current_user,transaction_params[:amount].to_d.abs)
     if result
       render :json => {:balance => current_user.balance} and return
     end

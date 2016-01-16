@@ -10,7 +10,7 @@ class Api::V1::RequestsController < ApplicationController
   def create
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.users.where("id != ?",current_user.id).first
-    amount = permitted_params[:amount].to_d
+    amount = permitted_params[:amount].to_d.abs
     post,request = RequestServiceObject.create(current_user,other_user,amount,conversation)
     render :json => {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false and return
     #TODO show errors from request

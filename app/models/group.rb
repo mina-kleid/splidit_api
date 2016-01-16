@@ -10,6 +10,8 @@ class Group < ActiveRecord::Base
 
   has_one :creator, :class_name => "User",:foreign_key => :creator_id
 
+  validates :balance, :numericality => { :greater_than_or_equal_to => 0 }
+
 
   enum type: [:sum_per_person, :open_pot]
 
