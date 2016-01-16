@@ -111,7 +111,6 @@ ActiveRecord::Schema.define(version: 20151205141012) do
     t.string   "authentication_token", limit: 255
     t.string   "salt",                 limit: 255
     t.string   "device_token"
-    t.string   "country_code"
   end
 
   add_foreign_key "posts", "users"
