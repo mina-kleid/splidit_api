@@ -12,7 +12,7 @@ class Conversation < ActiveRecord::Base
   end
 
   def other_user(user)
-    self.users.drop(user.id).first
+    self.users.drop(user).first
   end
 
 end
