@@ -9,6 +9,8 @@ class Api::V1::PostsController < ApplicationController
     @post.target = @conversation
     @post.post_type = Post.post_types[:text]
     if @post.save
+      APNS.send_notification(@conversation.other_user(current_user), :alert => 'You have received a new post', :badge => 1, :sound => 'default',
+                             :other => {:conversation_id => @conversation.id})
       render :json => @post and return
     end
     return api_error(@post.errors.messages)

@@ -11,4 +11,8 @@ class Conversation < ActiveRecord::Base
     User.where(:id => [user1_id,user2_id])
   end
 
+  def other_user(user)
+    self.users.drop(user.id).first
+  end
+
 end
