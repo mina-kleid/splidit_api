@@ -23,7 +23,7 @@ gem 'apns'
 gem 'rails_12factor', group: :production
 
 group :development, :test do
-  gem 'rspec'
+  gem 'rspec-rails'
 end
 
 # To use Jbuilder templates for JSON
