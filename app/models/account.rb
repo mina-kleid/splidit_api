@@ -1,7 +1,7 @@
 class Account < ActiveRecord::Base
   belongs_to :user
 
-  validates_presence_of :iban,:bic,:account_name,:user
+  validates_presence_of :iban,:account_name,:user
   validates_uniqueness_of :iban
 
   after_validation :validate_iban

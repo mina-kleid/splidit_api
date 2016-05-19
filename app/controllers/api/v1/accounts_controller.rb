@@ -17,7 +17,7 @@ class Api::V1::AccountsController < ApplicationController
     @account = Account.new(permitted_params)
     @account.user = current_user
     if @account.save
-      render :json => @account,serializer: AccountSerializer, :status => 200 and return
+      render :json => @account,serializer: AccountSerializer, status: status_created and return
 
     end
     return api_error(@account.errors.messages)
