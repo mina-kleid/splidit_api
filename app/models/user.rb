@@ -1,9 +1,8 @@
-# require_dependency 'validators/email_validator.rb'
 class User < ActiveRecord::Base
 
   attr_accessor :password
 
-  before_create :generate_authentication_token,:encrypt_password
+  before_create :generate_authentication_token
   before_validation :modify_phone_number
 
   has_many :accounts
@@ -16,6 +15,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email,:phone
   validates :email, email: true
   validates_length_of :password, minimum: 6
+  validates_length_of :pin, is: 4, allow_nil: true
   validates :balance, :numericality => { :greater_than_or_equal_to => 0 }
 
   def conversations
@@ -35,6 +35,30 @@ class User < ActiveRecord::Base
     encrypted_password == self.encrypted_password
   end
 
+  def authenticate_pin(pin)
+    encrypted_pin = BCrypt::Engine.hash_secret(pin,self.salt)
+    encrypted_pin == self.encrypted_pin
+  end
+
+  def pin
+    @pin ||= encrypted_pin
+  end
+
+  def pin=(new_pin)
+    @pin = new_pin
+    self.encrypted_pin = BCrypt::Engine.hash_secret(new_pin, salt)
+  end
+
+  def password
+    @password ||= self.encrypted_password
+  end
+
+  def password=(new_password)
+    salt ||= generate_salt
+    @password = new_password
+    self.encrypted_password = BCrypt::Engine.hash_secret(new_password,salt)
+  end
+
   private
 
   def modify_phone_number
@@ -48,9 +72,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def encrypt_password
+  def generate_salt
     salt = BCrypt::Engine.generate_salt
-    self[:encrypted_password] = BCrypt::Engine.hash_secret(@password, salt)
     self[:salt] = salt
   end
 
