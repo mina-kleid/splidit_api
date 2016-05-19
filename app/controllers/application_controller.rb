@@ -56,6 +56,14 @@ class ApplicationController < ActionController::API
     render :json => {:errors =>error}, :status => 400
   end
 
+  def status_created
+    201
+  end
+
+  def status_success
+    200
+  end
+
   # def run_oauth_check
   #   #TODO some work done on oauth, but need further work
   #   req = OAuth::RequestProxy::RackRequest.new(request)
