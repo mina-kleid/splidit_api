@@ -25,6 +25,7 @@ gem 'rails_12factor', group: :production
 group :development, :test do
   gem 'rspec-rails'
   gem "factory_girl_rails", "~> 4.0"
+  gem 'faker', "~> 1.6.3"
 end
 
 # To use Jbuilder templates for JSON

@@ -15,15 +15,14 @@ class Api::V1::UsersController < ApplicationController
     return api_error(@user.errors.messages)
   end
 
-  # def update
-  #   @user = User.find(params[:id])
-  #
-  #   if @user.update_attributes(permitted_params)
-  #     render :json => @user and return
-  #   else
-  #     render :json => {:errors => @user.errors.messages}, :status => 400 and return
-  #   end
-  # end
+  def update
+    @user = current_user
+    if @user.update_attributes(permitted_update_params)
+      render :json => @user, status: status_success and return
+    else
+      render :json => {:errors => @user.errors.messages}, :status => 400 and return
+    end
+  end
 
   def device_token
     if current_user.update_attribute(:device_token,device_token_params[:device_token])
@@ -35,6 +34,9 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
+  def permitted_update_params
+    params.require(:user).permit(:pin,:name,:email,:phone,:password)
+  end
 
   def permitted_params
     params.require(:user).permit(:name,:email,:phone,:password)

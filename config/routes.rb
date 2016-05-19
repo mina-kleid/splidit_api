@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       get "test" => "test#test"
       get "test_api" => "test#test_api"
       resources :sessions, only: :create
-      resources :users, :only => [:create] do
+      resources :users, :only => [:create,:update] do
         collection do
           get "me" => "users#show"
           post "device_token" => "users#device_token"
