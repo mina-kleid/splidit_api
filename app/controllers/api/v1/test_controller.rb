@@ -5,7 +5,7 @@ class Api::V1::TestController  < ApplicationController
 
 
   def test
-    @data = { "coincoin" => "o< o<" }
+    @data = { "coincoin" => "o< o< codeship" }
     render :json => @data
   end
 
