@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160519112256) do
+ActiveRecord::Schema.define(version: 20160520120107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,6 +112,8 @@ ActiveRecord::Schema.define(version: 20160519112256) do
     t.string   "salt",                 limit: 255
     t.string   "device_token"
     t.string   "encrypted_pin"
+    t.boolean  "is_pin_verified",                                            default: false
+    t.boolean  "is_phone_verified",                                          default: false
   end
 
   add_foreign_key "posts", "users"
