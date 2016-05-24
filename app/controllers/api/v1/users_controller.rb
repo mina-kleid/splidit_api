@@ -35,7 +35,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def permitted_update_params
-    params.require(:user).permit(:pin,:name,:email,:phone,:password)
+    params.require(:user).permit(:pin,:name,:email,:phone,:password,:is_pin_verified,:is_phone_verified)
   end
 
   def permitted_params
