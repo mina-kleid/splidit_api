@@ -10,7 +10,6 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.new(permitted_params)
     if @user.save
-      puts @user.id
       render :json => {:token => @user.authentication_token,id: @user.id.to_s}, status: status_created and return
     end
     return api_error(@user.errors.messages)
