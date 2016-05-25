@@ -17,7 +17,7 @@ gem 'active_model_serializers','~>0.9.2'
 
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'email_validator'
-gem 'iban-tools'
+gem 'ibanizator'
 gem 'phonelib'
 gem 'apns'
 
