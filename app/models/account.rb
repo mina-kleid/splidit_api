@@ -3,7 +3,7 @@ class Account < ActiveRecord::Base
 
   validates_presence_of :account_name, :user
   validates_presence_of :account_number, :blz, unless: :iban?
-  validates_presence_of :iban, unless: (:account_number? && :blz?)
+  validates_presence_of :iban, unless: (:account_number? || :blz?)
 
   before_validation :generate_iban, if: Proc.new {|account| account.account_number.present? && account.blz.present? && account.iban.blank?}
   before_validation :validate_iban, if: :iban?

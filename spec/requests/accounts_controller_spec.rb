@@ -59,4 +59,31 @@ describe Api::V1::AccountsController, type: :request do
       expect(user.accounts).to be_empty
     end
   end
+
+  describe "create bank account with missing date" do
+     it "should not create bank account without any data" do
+       post "/api/v1/accounts", {api_key:  api_key, account: {account_name: user.name}}, header_for_user(user)
+       expect(response).to have_http_status(400)
+       expect(user.accounts).to be_empty
+       parsed_body = JSON.parse(response.body)
+       expect(parsed_body).not_to be_empty
+       expect(parsed_body).to have_key("errors")
+       expect(parsed_body["errors"]).to have_key("account_number")
+       expect(parsed_body["errors"]).to have_key("blz")
+       expect(parsed_body["errors"]).to have_key("iban")
+     end
+
+    it "should not create bank account with missing bank code" do
+      account_number = "532013000"
+      post "/api/v1/accounts", {api_key:  api_key, account: {account_number: account_number, account_name: user.name}}, header_for_user(user)
+      expect(response).to have_http_status(400)
+      expect(user.accounts).to be_empty
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).to have_key("errors")
+      expect(parsed_body["errors"]).not_to have_key("account_number")
+      expect(parsed_body["errors"]).to have_key("blz")
+      expect(parsed_body["errors"]).not_to have_key("iban")
+    end
+  end
 end
