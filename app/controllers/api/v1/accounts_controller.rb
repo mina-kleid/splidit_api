@@ -55,7 +55,7 @@ class Api::V1::AccountsController < ApplicationController
 
 
   def permitted_params
-    params.require(:account).permit(:iban,:bic,:account_name)
+    params.require(:account).permit(:iban,:bic,:account_name,:account_number,:blz)
   end
 
   def transaction_params
