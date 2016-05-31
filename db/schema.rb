@@ -11,20 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526144628) do
+ActiveRecord::Schema.define(version: 20160531122213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.string   "iban",           limit: 255
-    t.string   "account_name",   limit: 255
+    t.string   "name",           limit: 255
     t.string   "bic",            limit: 255
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "account_number"
     t.string   "blz"
+    t.string   "account_holder"
   end
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
