@@ -95,7 +95,7 @@ describe Api::V1::AccountsController, type: :request do
       expect(parsed_body["balance"].to_d).to eq(user_old_balance + amount)
       expect(user.balance).to eq(user_old_balance + amount)
       expect(Transaction.count).to eq(transactions_count + 2)
-      expect(Transaction.credit.first.balance).to eq(user_old_balance + amount)
+      expect(Transaction.credit.first.balance_after).to eq(user_old_balance + amount)
     end
 
     it "deposit to the user account" do
@@ -112,7 +112,7 @@ describe Api::V1::AccountsController, type: :request do
       expect(parsed_body["balance"].to_d).to eq(user_old_balance - amount)
       expect(user.balance).to eq(user_old_balance - amount)
       expect(Transaction.count).to eq(transactions_count + 2)
-      expect(Transaction.debit.first.balance).to eq(user_old_balance - amount)
+      expect(Transaction.debit.first.balance_after).to eq(user_old_balance - amount)
     end
 
     it "should not take money from the user if he doesnt have enough funds" do
