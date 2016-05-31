@@ -38,7 +38,7 @@ class Api::V1::AccountsController < ApplicationController
     if result
       render :json => {:balance => current_user.balance} and return
     end
-    return api_error("Transaction didnt work")
+    return api_error(transaction: ["Transaction didnt work"])
   end
 
   def deposit
@@ -47,7 +47,7 @@ class Api::V1::AccountsController < ApplicationController
     if result
       render :json => {:balance => current_user.balance} and return
     end
-    return api_error("Insufficient funds")
+    return api_error(transaction: ["Insufficient funds"])
   end
 
 

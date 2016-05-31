@@ -75,4 +75,60 @@ describe Api::V1::AccountsController, type: :request do
       expect(parsed_body["errors"]).not_to have_key("iban")
     end
   end
+
+  describe "Withdraw from account to user" do
+
+    let!(:user) {create(:user, balance: 100)}
+    let!(:account) {create(:account, user: user)}
+
+    it "withdraw to the user balance" do
+      transactions_count = Transaction.count
+      user_old_balance = user.balance
+      amount = 10
+      post "/api/v1/accounts/#{account.id}/withdraw", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      user.reload
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("balance")
+      expect(parsed_body["balance"].to_d).to eq(user_old_balance + amount)
+      expect(user.balance).to eq(user_old_balance + amount)
+      expect(Transaction.count).to eq(transactions_count + 2)
+      expect(Transaction.credit.first.balance).to eq(user_old_balance + amount)
+    end
+
+    it "deposit to the user account" do
+      transactions_count = Transaction.count
+      user_old_balance = user.balance
+      amount = 10
+      post "/api/v1/accounts/#{account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      user.reload
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("balance")
+      expect(parsed_body["balance"].to_d).to eq(user_old_balance - amount)
+      expect(user.balance).to eq(user_old_balance - amount)
+      expect(Transaction.count).to eq(transactions_count + 2)
+      expect(Transaction.debit.first.balance).to eq(user_old_balance - amount)
+    end
+
+    it "should not take money from the user if he doesnt have enough funds" do
+      transactions_count = Transaction.count
+      user_old_balance = user.balance
+      amount = 100.1
+      post "/api/v1/accounts/#{account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      user.reload
+      expect(response).to have_http_status(400)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).to have_key("errors")
+      expect(parsed_body).not_to have_key("balance")
+      expect(parsed_body["errors"]).to have_key("transaction")
+      expect(user.balance).to eq(user_old_balance)
+      expect(Transaction.count).to eq(transactions_count)
+    end
+  end
 end
