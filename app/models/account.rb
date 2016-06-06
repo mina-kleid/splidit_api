@@ -8,14 +8,6 @@ class Account < ActiveRecord::Base
   before_validation :generate_iban, if: Proc.new {|account| account.account_number.present? && account.blz.present? && account.iban.blank?}
   before_validation :validate_iban, if: :iban?
 
-  def deposit(amount)
-    ::AccountTransactionServiceObject.deposit_to_account(self,self.user,amount)
-  end
-
-  def withdraw(amount)
-    ::AccountTransactionServiceObject.withdraw_from_account(self,self.user,amount)
-  end
-
   private
 
   def generate_iban
