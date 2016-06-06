@@ -38,14 +38,14 @@ ActiveRecord::Schema.define(version: 20160531135019) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",           limit: 255
+    t.string   "name"
     t.integer  "type"
-    t.decimal  "balance",                    precision: 15, scale: 10, default: 0.0
+    t.decimal  "balance",        precision: 15, scale: 10, default: 0.0
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "creator_id"
-    t.decimal  "sum_per_person",             precision: 15, scale: 10
+    t.decimal  "sum_per_person", precision: 15, scale: 10
   end
 
   add_index "groups", ["creator_id"], name: "index_groups_on_creator_id", using: :btree
@@ -64,11 +64,10 @@ ActiveRecord::Schema.define(version: 20160531135019) do
   add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
-    t.decimal  "amount",            precision: 15, scale: 10
+    t.decimal  "amount",      precision: 15, scale: 10
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "status_changed_at"
     t.integer  "source_id"
     t.string   "source_type"
     t.integer  "target_id"
@@ -91,7 +90,25 @@ ActiveRecord::Schema.define(version: 20160531135019) do
   add_index "transactions", ["source_type", "source_id"], name: "index_transactions_on_source_type_and_source_id", using: :btree
   add_index "transactions", ["target_type", "target_id"], name: "index_transactions_on_target_type_and_target_id", using: :btree
 
-  create_table "user_groups", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "secret"
+    t.string   "key"
+    t.decimal  "balance",              precision: 15, scale: 10, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "phone"
+    t.string   "encrypted_password"
+    t.string   "salt"
+    t.string   "authentication_token"
+    t.string   "device_token"
+    t.string   "encrypted_pin"
+    t.boolean  "is_pin_verified",                                default: false
+    t.boolean  "is_phone_verified",                              default: false
+  end
+
+  create_table "users_groups", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "group_id"
     t.datetime "created_at"
@@ -99,26 +116,8 @@ ActiveRecord::Schema.define(version: 20160531135019) do
     t.boolean  "is_admin"
   end
 
-  add_index "user_groups", ["group_id"], name: "index_users_groups_on_group_id", using: :btree
-  add_index "user_groups", ["user_id"], name: "index_users_groups_on_user_id", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "name",                 limit: 255
-    t.string   "email",                limit: 255
-    t.string   "secret",               limit: 255
-    t.string   "key",                  limit: 255
-    t.decimal  "balance",                          precision: 15, scale: 10, default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "phone",                limit: 255
-    t.string   "encrypted_password",   limit: 255
-    t.string   "authentication_token", limit: 255
-    t.string   "salt",                 limit: 255
-    t.string   "device_token"
-    t.string   "encrypted_pin"
-    t.boolean  "is_pin_verified",                                            default: false
-    t.boolean  "is_phone_verified",                                          default: false
-  end
+  add_index "users_groups", ["group_id"], name: "index_users_groups_on_group_id", using: :btree
+  add_index "users_groups", ["user_id"], name: "index_users_groups_on_user_id", using: :btree
 
   add_foreign_key "posts", "users"
 end
