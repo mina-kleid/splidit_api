@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531135019) do
+ActiveRecord::Schema.define(version: 20160606130213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20160531135019) do
     t.string   "source_type"
     t.integer  "target_id"
     t.string   "target_type"
+    t.string   "text"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -85,6 +86,7 @@ ActiveRecord::Schema.define(version: 20160531135019) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.decimal  "balance_after",    precision: 15, scale: 10
+    t.string   "text"
   end
 
   add_index "transactions", ["source_type", "source_id"], name: "index_transactions_on_source_type_and_source_id", using: :btree
