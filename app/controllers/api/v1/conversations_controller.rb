@@ -4,12 +4,16 @@ class Api::V1::ConversationsController < ApplicationController
 
   def show
     @conversation = current_user.conversations.find(params[:id])
-    render :json => @conversation,show_all_posts: true
+    #TODO remove this when implemented in phone
+    if permitted_params[:page].present?
+      render :json => @conversation, show_paged_posts: true, page: permitted_params[:page] and return
+    end
+    render :json => @conversation, show_all_posts: true and return
   end
 
   def index
     @conversations = current_user.conversations
-    render :json => @conversations,show_all_posts: false
+    render :json => @conversations, show_all_posts: false
   end
 
   def create
@@ -17,7 +21,7 @@ class Api::V1::ConversationsController < ApplicationController
     conversation_ids = current_user.conversations.where("user1_id = ? or user2_id = ?",@second_user.id,@second_user.id).pluck(:id)
     if conversation_ids.any?
       @conversation = Conversation.find(conversation_ids.first)
-      render :json => @conversations,show_all_posts: false and return
+      render :json => @conversation, show_all_posts: false and return
     end
     @conversation = Conversation.new(:first_user => current_user,:second_user => @second_user)
     if @conversation.save
@@ -30,7 +34,7 @@ class Api::V1::ConversationsController < ApplicationController
   private
 
   def permitted_params
-    params.require(:conversation).permit(:user_id)
+    params.require(:conversation).permit(:user_id,:page)
   end
 
 end

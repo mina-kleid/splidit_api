@@ -5,4 +5,8 @@ class Post < ActiveRecord::Base
   enum post_type: [:text,:transactions,:request,:request_accepted,:request_rejected]
 
   validates_presence_of :user,:target,:text
+
+  default_scope {order('created_at DESC')}
+
+  self.per_page = 15
 end
