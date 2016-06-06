@@ -1,9 +1,9 @@
 class TransactionServiceObject
 
-  def self.create(source,target,amount,post_target=nil)
+  def self.create(source,target,amount,post_target=nil,text)
     if source.balance - amount > 0
-      debit_transaction = Transaction.new(:source => source,:target => target,:amount => amount,:transaction_type => Transaction.transaction_types[:debit], balance_before: source.balance, balance_after: source.balance - amount)
-      credit_transaction = Transaction.new(:source => target,:target => source,:amount => amount,:transaction_type => Transaction.transaction_types[:credit], balance_before: target.balance, balance_after: target.balance + amount)
+      debit_transaction = Transaction.new(:source => source,:target => target,:amount => amount,:transaction_type => Transaction.transaction_types[:debit], balance_before: source.balance, balance_after: source.balance - amount, text: text)
+      credit_transaction = Transaction.new(:source => target,:target => source,:amount => amount,:transaction_type => Transaction.transaction_types[:credit], balance_before: target.balance, balance_after: target.balance + amount, text: text)
       post = Post.new(:user => source,:target => post_target,:text => "#{amount}",:post_type => Post.post_types[:transaction]) if post_target.present?
       Transaction.transaction do
         debit_transaction.save

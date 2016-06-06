@@ -11,7 +11,8 @@ class Api::V1::RequestsController < ApplicationController
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.other_user(current_user)
     amount = permitted_params[:amount].to_d.abs
-    post,request = RequestServiceObject.create(current_user,other_user,amount,conversation)
+    text = permitted_params[:text]
+    post,request = RequestServiceObject.create(current_user,other_user,amount,conversation,text)
     APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
                            :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
     render :json => {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false and return
@@ -50,7 +51,7 @@ class Api::V1::RequestsController < ApplicationController
 
 
   def permitted_params
-    params.require(:request).permit(:amount)
+    params.require(:request).permit(:amount,:text)
   end
 
 end

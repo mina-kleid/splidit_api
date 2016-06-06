@@ -1,7 +1,7 @@
 class RequestServiceObject
 
-  def self.create(source, target, amount, post_target)
-    request = Request.new(:source => source, :target => target, :amount => amount, :status => Request.statuses[:pending])
+  def self.create(source, target, amount, post_target,text)
+    request = Request.new(:source => source, :target => target, :amount => amount, :status => Request.statuses[:pending], text: text)
     post = Post.new(:user => source, :target => post_target, :text => "#{amount}", :post_type => Post.post_types[:request])
     Request.transaction do
       request.save

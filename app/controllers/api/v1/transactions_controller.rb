@@ -6,7 +6,8 @@ class Api::V1::TransactionsController < ApplicationController
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.other_user(current_user)
     amount = permitted_params[:amount].to_d.abs
-    success, result = TransactionServiceObject.create(current_user, other_user, amount, conversation)
+    text = permitted_params[:text]
+    success, result = TransactionServiceObject.create(current_user, other_user, amount, conversation, text)
     if success
       APNS.send_notification(other_user(current_user).device_token, :alert => 'You have received money', :badge => 1, :sound => 'default',
                              :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
@@ -21,7 +22,7 @@ class Api::V1::TransactionsController < ApplicationController
 
 
   def permitted_params
-    params.require(:transaction).permit(:amount)
+    params.require(:transaction).permit(:amount,:text)
   end
 
 
