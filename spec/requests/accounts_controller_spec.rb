@@ -22,8 +22,6 @@ describe Api::V1::AccountsController, type: :request do
       expect(response).to have_http_status(400)
       expect(parsed_body).not_to be_empty
       expect(parsed_body).to have_key("errors")
-      expect(parsed_body["errors"]).to have_key("iban")
-      expect(parsed_body["errors"]).not_to have_key("account_number")
       expect(user.accounts).to be_empty
     end
 
@@ -53,9 +51,6 @@ describe Api::V1::AccountsController, type: :request do
       parsed_body = JSON.parse(response.body)
       expect(parsed_body).not_to be_empty
       expect(parsed_body).to have_key("errors")
-      expect(parsed_body["errors"]).to have_key("account_number")
-      expect(parsed_body["errors"]).to have_key("blz")
-      expect(parsed_body["errors"]).not_to have_key("iban")
       expect(user.accounts).to be_empty
     end
   end
@@ -70,9 +65,6 @@ describe Api::V1::AccountsController, type: :request do
       parsed_body = JSON.parse(response.body)
       expect(parsed_body).not_to be_empty
       expect(parsed_body).to have_key("errors")
-      expect(parsed_body["errors"]).not_to have_key("account_number")
-      expect(parsed_body["errors"]).to have_key("blz")
-      expect(parsed_body["errors"]).not_to have_key("iban")
     end
   end
 
@@ -126,7 +118,6 @@ describe Api::V1::AccountsController, type: :request do
       expect(parsed_body).not_to be_empty
       expect(parsed_body).to have_key("errors")
       expect(parsed_body).not_to have_key("balance")
-      expect(parsed_body["errors"]).to have_key("transaction")
       expect(user.balance).to eq(user_old_balance)
       expect(Transaction.count).to eq(transactions_count)
     end

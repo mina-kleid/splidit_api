@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :target_requests, :as => :target,:class_name => "Request"
 
   validates_presence_of :name,:email,:phone,:password
-  validates :phone, phone: { possible: true, types: [:mobile] }
+  validates :phone, phone: { possible: true, types: [:mobile], allow_blank: true  }
   validates_uniqueness_of :email,:phone
   validates :email, email: true
   validates_length_of :password, minimum: 6
@@ -62,7 +62,8 @@ class User < ActiveRecord::Base
   private
 
   def modify_phone_number
-    self[:phone] = Phonelib.parse(self.phone).international
+    phone_number = Phonelib.parse(self.phone).international
+    self[:phone] = phone_number if phone_number.present?
   end
 
   def generate_authentication_token

@@ -15,7 +15,7 @@ class Api::V1::GroupsController < ApplicationController
     if @group.save
       render :json => @group,serializer: GroupSerializer
     else
-      render :json => {:errors => @group.errors.messages},:status => 400
+      render :json => {:errors => @group.errors.full_messages},:status => 400
     end
   end
 

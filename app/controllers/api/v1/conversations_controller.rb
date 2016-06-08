@@ -27,7 +27,7 @@ class Api::V1::ConversationsController < ApplicationController
     if @conversation.save
       render :json => @conversation and return
     end
-    return api_error(@conversation.errors.messages)
+    return api_error(@conversation.errors.full_messages)
   end
 
 

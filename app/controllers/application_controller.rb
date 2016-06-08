@@ -52,8 +52,8 @@ class ApplicationController < ActionController::API
     render :json => {:errors => "Wrong api key"}, :status => 401
   end
 
-  def api_error(error)
-    render :json => {:errors =>error}, :status => 400
+  def api_error(errors)
+    render :json => {:errors =>errors}, :status => 400
   end
 
   def status_created

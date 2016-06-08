@@ -14,7 +14,7 @@ class Api::V1::PostsController < ApplicationController
                              :other => {:conversation_id => @conversation.id}) unless other_user.device_token.nil?
       render :json => @post and return
     end
-    return api_error(@post.errors.messages)
+    return api_error(@post.errors.full_messages)
   end
 
 
