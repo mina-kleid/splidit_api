@@ -2,9 +2,6 @@ require 'rails_helper'
 
 describe Api::V1::ConversationsController, type: :request do
 
-
-
-
   describe "Create new conversations" do
 
     let!(:user_1) {create(:user)}

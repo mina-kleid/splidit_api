@@ -12,7 +12,7 @@ class Api::V1::PostsController < ApplicationController
     if @post.save
       APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
                              :other => {:conversation_id => @conversation.id}) unless other_user.device_token.nil?
-      render :json => @post and return
+      render :json => @post, status: status_created and return
     end
     return api_error(@post.errors.full_messages)
   end
