@@ -2,6 +2,17 @@ class Api::V1::PostsController < ApplicationController
 
   before_filter :authenticate_user!
 
+  def index
+    @conversation = current_user.conversations.find(params[:conversation_id])
+    #TODO remove this when implemented on phone
+    if permitted_params[:page].present?
+      @posts = @conversation.posts.paginate(page: permitted_params[:page])
+    else
+      @posts = @conversation.posts.all
+    end
+    render :json => @posts, each_serializer: PostSerializer and return
+  end
+
   def create
     @conversation = current_user.conversations.find(params[:conversation_id])
     other_user = @conversation.other_user(current_user)
@@ -22,7 +33,7 @@ class Api::V1::PostsController < ApplicationController
 
 
   def permitted_params
-    params.require(:post).permit(:text)
+    params.require(:post).permit(:text,:page)
   end
 
 end

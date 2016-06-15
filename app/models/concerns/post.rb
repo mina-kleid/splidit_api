@@ -9,7 +9,6 @@ module Post
     validates_presence_of :user,:text
 
     default_scope {order('created_at DESC')}
-
     self.per_page = 15
   end
 
