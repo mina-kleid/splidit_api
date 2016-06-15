@@ -1,4 +1,4 @@
-class CreateAccounts < ActiveRecord::Migration
+class CreateBankAccounts < ActiveRecord::Migration
   def change
     create_table :accounts do |t|
       t.string :iban

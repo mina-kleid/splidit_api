@@ -1,20 +1,19 @@
 class Api::V1::AccountsController < ApplicationController
 
-  #simple account creation ui
   before_filter :authenticate_user!
 
   def show
-    @account = current_user.accounts.find(params[:id])
+    @account = current_user.bank_accounts.find(params[:id])
     render :json => @account,serializer: AccountSerializer
   end
 
   def index
-    @accounts = current_user.accounts
+    @accounts = current_user.bank_accounts
     render :json => @accounts,each_serializer: AccountSerializer
   end
 
   def create
-    @account = Account.new(permitted_params)
+    @account = BankAccount.new(permitted_params)
     @account.user = current_user
     if @account.save
       render :json => @account,serializer: AccountSerializer, status: status_created and return
@@ -24,7 +23,7 @@ class Api::V1::AccountsController < ApplicationController
   end
 
   def update
-    @account = current_user.accounts.find(params[:id])
+    @account = current_user.bank_accounts.find(params[:id])
     if @account.update_attributes(permitted_params)
       render :json  => @account, serializer: AccountSerializer and return
     end
@@ -33,8 +32,8 @@ class Api::V1::AccountsController < ApplicationController
   end
 
   def withdraw
-    @account = current_user.accounts.find(params[:id])
-    result = AccountTransactionServiceObject.withdraw_from_account(@account,current_user,transaction_params[:amount].to_d.abs)
+    @account = current_user.bank_accounts.find(params[:id])
+    result = BankAccountTransactionServiceObject.withdraw_from_account(@account, current_user, transaction_params[:amount].to_d.abs)
     if result
       render :json => {:balance => current_user.balance} and return
     end
@@ -42,8 +41,8 @@ class Api::V1::AccountsController < ApplicationController
   end
 
   def deposit
-    @account = current_user.accounts.find(params[:id])
-    result = AccountTransactionServiceObject.deposit_to_account(@account,current_user,transaction_params[:amount].to_d.abs)
+    @account = current_user.bank_accounts.find(params[:id])
+    result = BankAccountTransactionServiceObject.deposit_to_account(@account, current_user, transaction_params[:amount].to_d.abs)
     if result
       render :json => {:balance => current_user.balance} and return
     end
