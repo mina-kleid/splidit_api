@@ -1,4 +1,4 @@
-class Api::V1::PostsController < ApplicationController
+class Api::V1::ConversationPostsController < ApplicationController
 
   before_filter :authenticate_user!
 
@@ -10,7 +10,7 @@ class Api::V1::PostsController < ApplicationController
     else
       @posts = @conversation.posts.all
     end
-    render :json => @posts, each_serializer: PostSerializer and return
+    render :json => @posts, root: 'posts', each_serializer: PostSerializer and return
   end
 
   def create

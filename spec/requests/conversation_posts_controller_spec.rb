@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::V1::PostsController, type: :request do
+describe Api::V1::ConversationPostsController, type: :request do
 
   describe "should create a new post in the conversation" do
 

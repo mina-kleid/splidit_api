@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       end
 
       resources :conversations, :except => [:new,:edit,:destroy] do
-        resources :posts, :only => [:create, :index]
+        resources :conversation_posts, path: 'posts', :only => [:create, :index]
         resources :transactions, :only => :create
         resources :requests, :only => :create
         # post "transaction" => "conversations#transaction"
