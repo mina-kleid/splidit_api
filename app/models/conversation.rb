@@ -2,7 +2,7 @@ class Conversation < ActiveRecord::Base
 
   belongs_to :first_user,:foreign_key => "user1_id",:class_name => "User"
   belongs_to :second_user,:foreign_key => "user2_id",:class_name => "User"
-  has_many :posts,:as => :target
+  has_many :posts, foreign_key: "conversation_id", class_name: "ConversationPost"
 
   validates_presence_of :first_user,:second_user
   validates_uniqueness_of :user1_id, :scope => [:user2_id],:message => "Conversation already exists"

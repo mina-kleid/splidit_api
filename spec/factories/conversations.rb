@@ -8,8 +8,8 @@ FactoryGirl.define do
       end
       after(:create) do |conversation, evaluator|
         evaluator.post_count.times do
-            create(:post, :type_text, user: conversation.first_user, target: conversation)
-            create(:post, :type_text, user: conversation.second_user, target: conversation)
+            create(:conversation_post, :type_text, user: conversation.first_user, conversation: conversation)
+            create(:conversation_post, :type_text, user: conversation.second_user, conversation: conversation)
         end
       end
     end

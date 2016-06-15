@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615111239) do
+ActiveRecord::Schema.define(version: 20160615122126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,12 +40,38 @@ ActiveRecord::Schema.define(version: 20160615111239) do
 
   add_index "bank_accounts", ["user_id"], name: "index_bank_accounts_on_user_id", using: :btree
 
+  create_table "conversation_posts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "target_type"
+    t.string   "text"
+    t.integer  "post_type"
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.decimal  "amount",          precision: 15, scale: 10
+    t.integer  "conversation_id"
+  end
+
+  add_index "conversation_posts", ["user_id"], name: "index_convesation_posts_on_user_id", using: :btree
+
   create_table "conversations", force: :cascade do |t|
     t.integer  "user1_id"
     t.integer  "user2_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "group_posts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "text"
+    t.integer  "post_type"
+    t.decimal  "amount",     precision: 15, scale: 10
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "group_posts", ["group_id"], name: "index_group_posts_on_group_id", using: :btree
+  add_index "group_posts", ["user_id"], name: "index_group_posts_on_user_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
@@ -58,20 +84,6 @@ ActiveRecord::Schema.define(version: 20160615111239) do
   end
 
   add_index "groups", ["creator_id"], name: "index_groups_on_creator_id", using: :btree
-
-  create_table "posts", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "target_id"
-    t.string   "target_type"
-    t.string   "text"
-    t.integer  "post_type"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.decimal  "amount",      precision: 15, scale: 10
-  end
-
-  add_index "posts", ["target_type", "target_id"], name: "index_posts_on_target_type_and_target_id", using: :btree
-  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
     t.decimal  "amount",      precision: 15, scale: 10
@@ -128,5 +140,7 @@ ActiveRecord::Schema.define(version: 20160615111239) do
   add_index "users_groups", ["group_id"], name: "index_users_groups_on_group_id", using: :btree
   add_index "users_groups", ["user_id"], name: "index_users_groups_on_user_id", using: :btree
 
-  add_foreign_key "posts", "users"
+  add_foreign_key "conversation_posts", "users"
+  add_foreign_key "group_posts", "groups"
+  add_foreign_key "group_posts", "users"
 end
