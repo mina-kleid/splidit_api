@@ -1,22 +1,22 @@
-class Api::V1::AccountsController < ApplicationController
+class Api::V1::BankAccountsController < ApplicationController
 
   before_filter :authenticate_user!
 
   def show
     @account = current_user.bank_accounts.find(params[:id])
-    render :json => @account,serializer: AccountSerializer
+    render :json => @account,serializer: BankAccountSerializer
   end
 
   def index
     @accounts = current_user.bank_accounts
-    render :json => @accounts,each_serializer: AccountSerializer
+    render :json => @accounts,each_serializer: BankAccountSerializer
   end
 
   def create
     @account = BankAccount.new(permitted_params)
     @account.user = current_user
     if @account.save
-      render :json => @account,serializer: AccountSerializer, status: status_created and return
+      render :json => @account, serializer: BankAccountSerializer, status: status_created and return
 
     end
     return api_error(@account.errors.full_messages)
@@ -25,7 +25,7 @@ class Api::V1::AccountsController < ApplicationController
   def update
     @account = current_user.bank_accounts.find(params[:id])
     if @account.update_attributes(permitted_params)
-      render :json  => @account, serializer: AccountSerializer and return
+      render :json  => @account, serializer: BankAccountSerializer and return
     end
     return api_error(@account.errors.full_messages.full_messages)
 
