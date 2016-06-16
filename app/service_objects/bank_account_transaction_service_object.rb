@@ -7,7 +7,7 @@ class BankAccountTransactionServiceObject
     Transaction.transaction do
       debit_transaction.save!
       credit_transaction.save!
-      user_account.update_attributes!(:balance, user_account.balance + amount)
+      user_account.update_attributes!(balance: user_account.balance + amount)
     end
     return true
   end
@@ -20,7 +20,7 @@ class BankAccountTransactionServiceObject
       Transaction.transaction do
         debit_transaction.save!
         credit_transaction.save!
-        user_account.update_attributes!(:balance, user_account.balance - amount)
+        user_account.update_attributes!(balance: user_account.balance - amount)
       end
       return true
     end

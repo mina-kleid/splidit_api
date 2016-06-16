@@ -9,8 +9,8 @@ class TransactionServiceObject
       Transaction.transaction do
         debit_transaction.save
         credit_transaction.save
-        source_account.update_attributes!(:balance ,source_account.balance - amount)
-        target_account.update_attributes!(:balance , target_account.balance + amount)
+        source_account.update_attributes!(balance: source_account.balance - amount)
+        target_account.update_attributes!(balance: target_account.balance + amount)
       end
       return true
     end
