@@ -1,45 +1,35 @@
 class RequestServiceObject
 
-  def self.create(source, target, amount, post_target,text)
-    request = Request.new(:source => source, :target => target, :amount => amount, :status => Request.statuses[:pending], text: text)
-    post = Post.new(:user => source, :target => post_target, amount: amount, :post_type => Post.post_types[:request])
+  def self.create(source_account, target_account, amount,text)
+    request = Request.new(:source => source_account, :target => target_account, :amount => amount, :status => Request.statuses[:pending], text: text)
     Request.transaction do
-      request.save
-      post.save
+      request.save!
     end
-    return [post,request]
+    return request
   end
 
-  def self.accept(request, post_target)
-    if request.pending?
-      success , error_message = TransactionServiceObject.create(request.source, request.target, request.amount, request.text)
+  def self.accept(request)
+    Request.transaction do
+      success = TransactionServiceObject.create(request.source.owner, request.target.owner, request.amount, request.text)
       if success
-        post = Post.new(:user => request.target, :target => post_target, amount: request.amount, :post_type => Post.post_types[:request_accepted])
         request.status = Request.statuses[:accepted]
         request.status_changed_at = DateTime.now
-        Request.transaction do
-          request.save
-          post.save
-        end
-        return [true,post]
+        request.save!
       end
-      return [false,error_message]
     end
-    return [false,"Request is not in Pending state"]
+    return true
   end
 
-  def self.reject(request, post_target)
+  def self.reject(request)
     if request.pending?
       request.status = Request.statuses[:rejected]
       request.status_changed_at = DateTime.now
-      post = Post.new(:user => request.target, :target => post_target, amount: request.amount, :post_type => Post.post_types[:request_rejected])
       Request.transaction do
-        request.save
-        post.save
+        request.save!
       end
-      return [true,post]
+      return true
     end
-    return [false,"Request is not in pending state"]
+    return false
   end
 
 end

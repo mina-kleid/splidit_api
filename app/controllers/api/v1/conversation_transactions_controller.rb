@@ -1,4 +1,4 @@
-class Api::V1::TransactionsController < ApplicationController
+class Api::V1::ConversationTransactionsController < ApplicationController
 
   before_filter :authenticate_user!
 
