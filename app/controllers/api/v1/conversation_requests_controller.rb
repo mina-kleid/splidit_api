@@ -12,11 +12,8 @@ class Api::V1::ConversationRequestsController < ApplicationController
     other_user = conversation.other_user(current_user)
     amount = permitted_params[:amount].to_d.abs
     text = permitted_params[:text]
-    request = RequestServiceObject.create(current_user.account, other_user.account, amount, text)
-    APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
-    post = ConversationPost.create(:user => current_user, :target => conversation, amount: amount, :post_type => ConversationPost.post_types[:request])
-    render :json => {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false and return
+    post, request = ConversationServiceObject.create_request(current_user, other_user, conversation, amount, text)
+    render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false and return
     #TODO show errors from request
   end
 
