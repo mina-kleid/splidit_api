@@ -1,14 +1,17 @@
 class ConversationServiceObject
 
   def self.create_request(source, target, conversation, amount, text)
+    post = ConversationPost.new(:user => source, :conversation => conversation, amount: amount, :post_type => ConversationPost.post_types[:request])
+    request = nil
     begin
       ActiveRecord::Base.transaction(requires_new: true) do
         request = RequestServiceObject.create(source.account, target.account, amount, text)
-        post = ConversationPost.create!(:user => source, :target => conversation, amount: amount, :post_type => ConversationPost.post_types[:request])
+        post.save!
       end
     rescue Errors::RequestNotCompletedError => e
       raise e
     rescue StandardError => e
+      puts e.inspect
       raise Errors::RequestNotCompletedError
     end
     APNS.send_notification(target.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',

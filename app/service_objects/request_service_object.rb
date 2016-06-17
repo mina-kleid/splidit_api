@@ -16,8 +16,6 @@ class RequestServiceObject
     begin
       Request.transaction(requires_new: true) do
         TransactionServiceObject.create(request.source.owner, request.target.owner, request.amount, request.text)
-        request.status = Request.statuses[:accepted]
-        request.status_changed_at = DateTime.now
         request.update_attributes!({status: Request.statuses[:accepted], status_changed_at: DateTime.now})
       end
     rescue Errors::InsufficientFundsError => e
