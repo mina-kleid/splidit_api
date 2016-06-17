@@ -11,7 +11,6 @@ class ConversationServiceObject
     rescue Errors::RequestNotCompletedError => e
       raise e
     rescue StandardError => e
-      puts e.inspect
       raise Errors::RequestNotCompletedError
     end
     APNS.send_notification(target.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',

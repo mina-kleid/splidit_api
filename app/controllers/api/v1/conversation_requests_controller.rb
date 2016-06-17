@@ -12,9 +12,12 @@ class Api::V1::ConversationRequestsController < ApplicationController
     other_user = conversation.other_user(current_user)
     amount = permitted_params[:amount].to_d.abs
     text = permitted_params[:text]
+    begin
     post, request = ConversationServiceObject.create_request(current_user, other_user, conversation, amount, text)
     render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false, status: status_created and return
-    #TODO show errors from request
+    rescue Errors::RequestNotCompletedError => e
+      return api_error(e.message)
+    end
   end
 
   def accept
