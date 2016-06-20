@@ -29,8 +29,8 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    APNS.send_notification(request.source.user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless request.source.user.device_token.nil?
+    APNS.send_notification(request.source.owner.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
+                           :other => {:conversation_id => conversation.id}) unless request.source.owner.device_token.nil?
     return [post, transaction]
   end
 

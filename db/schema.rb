@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616082945) do
+ActiveRecord::Schema.define(version: 20160620113625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,13 +86,14 @@ ActiveRecord::Schema.define(version: 20160616082945) do
   add_index "groups", ["creator_id"], name: "index_groups_on_creator_id", using: :btree
 
   create_table "requests", force: :cascade do |t|
-    t.decimal  "amount",     precision: 15, scale: 10
+    t.decimal  "amount",            precision: 15, scale: 10
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "text"
     t.integer  "target_id"
     t.integer  "source_id"
+    t.datetime "status_changed_at"
   end
 
   add_index "requests", ["source_id"], name: "index_requests_on_source_id", using: :btree

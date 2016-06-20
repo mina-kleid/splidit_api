@@ -20,10 +20,13 @@ class RequestServiceObject
         request.update_attributes!({status: Request.statuses[:accepted], status_changed_at: DateTime.now})
       end
     rescue Errors::InsufficientFundsError => e
+      puts e.inspect
       raise e
     rescue Errors::TransactionNotCompletedError => e
+      puts e.inspect
       raise e
     rescue StandardError => e
+      puts e.inspect
       raise Errors::RequestNotAcceptedError
     end
     return transaction
