@@ -11,9 +11,8 @@ describe Api::V1::ConversationRequestsController, type: :request do
     it "should create a successful transaction between user" do
       amount = "10.0"
       post "/api/v1/conversations/#{conversation.id}/transactions", {api_key:  api_key, transaction: {amount: amount, text: "test"}}, header_for_user(user_1)
-      # expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:created)
       parsed_body = JSON.parse(response.body)
-      puts parsed_body.inspect
       expect(parsed_body).not_to be_empty
       expect(parsed_body).not_to have_key("errors")
       expect(parsed_body).to have_key("post")
