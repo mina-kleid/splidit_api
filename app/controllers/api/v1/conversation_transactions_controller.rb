@@ -7,14 +7,12 @@ class Api::V1::ConversationTransactionsController < ApplicationController
     other_user = conversation.other_user(current_user)
     amount = permitted_params[:amount].to_d.abs
     text = permitted_params[:text]
-    success, result = TransactionServiceObject.create(current_user, other_user, amount, conversation, text)
-    if success
-      APNS.send_notification(other_user(current_user).device_token, :alert => 'You have received money', :badge => 1, :sound => 'default',
-                             :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
-      render :json => {:post => PostSerializer.new(result), :user => {:balance => current_user.balance}},:root => false and return
+    begin
+      post, transaction = ConversationServiceObject.create_transaction(current_user, other_user, conversation, amount, text)
+      render :json => {:post => PostSerializer.new(post), :user => {:balance => current_user.balance}, transaction: TransactionSerializer.new(transaction)},:root => false, status: status_created and return
+    rescue StandardError => e
+      return api_error(e.message)
     end
-    return api_error(result)
-    #TODO handle errors
   end
 
 

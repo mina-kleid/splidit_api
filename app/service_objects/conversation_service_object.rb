@@ -49,4 +49,20 @@ class ConversationServiceObject
     return post
   end
 
+  def self.create_transaction(source, target, conversation, amount, text)
+    post = ConversationPost.new(:user => source, :conversation => conversation, amount: amount, :post_type => ConversationPost.post_types[:transactions])
+    transaction = nil
+    begin
+      ActiveRecord::Base.transaction(requires_new: true) do
+        transaction = TransactionServiceObject.create(source, target, amount, text)
+        post.save!
+      end
+    rescue StandardError => e
+      raise e
+    end
+    APNS.send_notification(target.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
+                           :other => {:conversation_id => conversation.id}) unless target.device_token.nil?
+    return [post, transaction]
+  end
+
 end
