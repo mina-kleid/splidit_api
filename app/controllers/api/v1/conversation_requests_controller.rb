@@ -15,7 +15,7 @@ class Api::V1::ConversationRequestsController < ApplicationController
     begin
       post, request = ConversationServiceObject.create_request(current_user, other_user, conversation, amount, text)
       render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false, status: status_created and return
-    rescue Errors::RequestNotCompletedError => e
+    rescue StandardError => e
       return api_error(e.message)
     end
   end

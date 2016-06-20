@@ -3,7 +3,7 @@ class TransactionServiceObject
   def self.create(source, target, amount, text)
     source_account = source.account
     target_account = target.account
-    raise Errors::InsufficientFundsError and return if source_account.balance - amount < 0
+    raise Errors::InsufficientFundsError.new("Insufficient funds") and return if source_account.balance - amount < 0
     debit_transaction = Transaction.new(:source => source_account,:target => target_account,:amount => amount,:transaction_type => Transaction.transaction_types[:debit], balance_before: source_account.balance, balance_after: source_account.balance - amount, text: text)
     credit_transaction = Transaction.new(:source => target_account,:target => source_account,:amount => amount,:transaction_type => Transaction.transaction_types[:credit], balance_before: target_account.balance, balance_after: target_account.balance + amount, text: text)
     begin
@@ -14,7 +14,7 @@ class TransactionServiceObject
         target_account.update_attributes!(balance: target_account.balance + amount)
       end
     rescue StandardError => e
-      raise Errors::TransactionNotCompletedError
+      raise Errors::TransactionNotCompletedError.new(e.message)
     end
     return debit_transaction
   end

@@ -7,7 +7,7 @@ class RequestServiceObject
         request.save!
       end
     rescue StandardError => e
-      raise RequestNotCompletedError
+      raise RequestNotCompletedError.new(e.message)
     end
     return request
   end
@@ -24,7 +24,7 @@ class RequestServiceObject
     rescue Errors::TransactionNotCompletedError => e
       raise e
     rescue StandardError => e
-      raise Errors::RequestNotAcceptedError
+      raise Errors::RequestNotAcceptedError.new(e.message)
     end
     return transaction
   end
@@ -37,7 +37,7 @@ class RequestServiceObject
           request.save!
         end
       rescue StandardError => e
-        raise RequestNotRejectedError
+        raise RequestNotRejectedError.new(e.message)
       end
       return true
   end
