@@ -35,18 +35,17 @@ class Api::V1::ConversationRequestsController < ApplicationController
   end
 
   def reject
-    @request = current_user.target_requests.pending.find(params[:id])
-    conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",@request.source_id,@request.source_id).first
-    success, result = RequestServiceObject.reject(@request)
-    if success
-      other_user = conversation.other_user(current_user)
-      APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                             :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
-      post = ConversationPost.create(:user => current_user, :target => conversation, amount: amount, :post_type => ConversationPost.post_types[:request_rejected])
-      render :json => {:post => PostSerializer.new(post),:user => {:balance => current_user.balance}},:root => false and return
+    request = current_user.received_requests.find(params[:id])
+    unless request.pending?
+      return api_error("Request not in pending status")
     end
-    return api_error("error")
-    #TODO handle errors
+    conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",request.source.owner_id,request.source.owner_id).first
+    begin
+      post = ConversationServiceObject.reject_request(request, conversation)
+      render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false, status: status_success and return
+    rescue StandardError => e
+      return api_error(e.message)
+    end
   end
 
 

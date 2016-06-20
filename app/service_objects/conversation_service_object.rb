@@ -35,7 +35,18 @@ class ConversationServiceObject
   end
 
   def self.reject_request(request, conversation)
-
+    post = ConversationPost.new(:user => request.target.owner, :conversation => conversation, amount: request.amount, :post_type => ConversationPost.post_types[:request_rejected])
+    begin
+      ActiveRecord::Base.transaction(requires_new: true) do
+        RequestServiceObject.reject(request)
+        post.save!
+      end
+    rescue StandardError => e
+      raise e
+    end
+    APNS.send_notification(request.source.owner.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
+                           :other => {:conversation_id => conversation.id}) unless request.source.owner.device_token.nil?
+    return post
   end
 
 end
