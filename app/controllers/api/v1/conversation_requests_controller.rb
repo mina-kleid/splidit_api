@@ -13,19 +13,23 @@ class Api::V1::ConversationRequestsController < ApplicationController
     amount = permitted_params[:amount].to_d.abs
     text = permitted_params[:text]
     begin
-    post, request = ConversationServiceObject.create_request(current_user, other_user, conversation, amount, text)
-    render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false, status: status_created and return
+      post, request = ConversationServiceObject.create_request(current_user, other_user, conversation, amount, text)
+      render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request)},:root => false, status: status_created and return
     rescue Errors::RequestNotCompletedError => e
       return api_error(e.message)
     end
   end
 
   def accept
-    @request = current_user.target_requests.pending.find(params[:id])
-    unless @request.pending?
+    request = current_user.received_requests.find(params[:id])
+    unless request.pending?
       return api_error("Request not in pending status")
     end
-    conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",@request.source.owner_id,@request.source.owner_id).first
+    conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",request.source.owner_id,request.source.owner_id).first
+    begin
+
+    rescue
+    end
     success = RequestServiceObject.accept(@request)
     if success
       other_user = conversation.other_user(current_user)

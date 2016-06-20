@@ -24,11 +24,11 @@ class User < ActiveRecord::Base
   end
 
   def sent_requests
-    Request.where(:sender_id => self.id,:sender_type => "User")
+    Request.where(source: self.account)
   end
 
   def received_requests
-    Request.where(:receiver_id => self.id,:receiver_type => "User")
+    Request.where(target: self.account)
   end
 
   def authenticate(password)
