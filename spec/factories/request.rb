@@ -4,13 +4,13 @@ FactoryGirl.define do
     association :source
     text {Faker::Superhero.power}
     trait :pending do
-      status {Request.statuses[:request_pending]}
+      status {Request.statuses[:pending]}
     end
     trait :rejected do
-      status {Request.statuses[:request_rejected]}
+      status {Request.statuses[:rejected]}
     end
     trait :accepted do
-      status {Request.statuses[:request_accepted]}
+      status {Request.statuses[:accepted]}
     end
   end
 end

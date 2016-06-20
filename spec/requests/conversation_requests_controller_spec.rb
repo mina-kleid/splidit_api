@@ -32,10 +32,12 @@ describe Api::V1::ConversationRequestsController, type: :request do
     let!(:user_1) {create(:user)}
     let!(:user_2) {create(:user)}
     let!(:conversation) {create(:conversation, first_user: user_1, second_user: user_2)}
-    let!(:request) {create(:request,:pending, source: user_1.account, target: user_2.account, amount: 10)}
+    let!(:request) {create(:request, :pending, source: user_1.account, target: user_2.account, amount: 10)}
 
     it "should accept a pending request" do
-      post "/api/v1/requests/#{request.id}/accept",{api_key:  api_key, request: {amount: amount, text: "test"}}
+      post "/api/v1/conversations/#{conversation.id}/requests/#{request.id}/accept", {api_key:  api_key}, header_for_user(user_2)
+      parsed_body = JSON.parse(response.body)
+      puts parsed_body.inspect
     end
   end
 end

@@ -27,18 +27,11 @@ class Api::V1::ConversationRequestsController < ApplicationController
     end
     conversation = current_user.conversations.where("user1_id = ? or user2_id = ?",request.source.owner_id,request.source.owner_id).first
     begin
-
-    rescue
+      post, transaction = ConversationServiceObject.accept_request(request, conversation)
+      render json: {:post =>PostSerializer.new(post),:request => RequestSerializer.new(request), transaction: TransactionSerializer.new(transaction) },:root => false, status: status_success and return
+    rescue StandardError => e
+      return api_error(e.message)
     end
-    success = RequestServiceObject.accept(@request)
-    if success
-      other_user = conversation.other_user(current_user)
-      APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                             :other => {:conversation_id => conversation.id}) unless other_user.device_token.nil?
-      post = ConversationPost.create(:user => current_user, :target => conversation, amount: amount, :post_type => ConversationPost.post_types[:request_accepted])
-      render :json => {:post => PostSerializer.new(post),:user => {:balance => current_user.balance}},:root => false and return
-    end
-    return api_error("Insufficient funds")
   end
 
   def reject

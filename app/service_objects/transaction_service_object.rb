@@ -16,6 +16,6 @@ class TransactionServiceObject
     rescue StandardError => e
       raise Errors::TransactionNotCompletedError
     end
-    return true
+    return debit_transaction
   end
 end

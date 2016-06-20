@@ -13,9 +13,10 @@ class RequestServiceObject
   end
 
   def self.accept(request)
+    transaction = nil
     begin
       Request.transaction(requires_new: true) do
-        TransactionServiceObject.create(request.source.owner, request.target.owner, request.amount, request.text)
+        transaction = TransactionServiceObject.create(request.source.owner, request.target.owner, request.amount, request.text)
         request.update_attributes!({status: Request.statuses[:accepted], status_changed_at: DateTime.now})
       end
     rescue Errors::InsufficientFundsError => e
@@ -25,7 +26,7 @@ class RequestServiceObject
     rescue StandardError => e
       raise Errors::RequestNotAcceptedError
     end
-    return true
+    return transaction
   end
 
   def self.reject(request)
