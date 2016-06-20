@@ -76,5 +76,25 @@ describe Api::V1::ConversationRequestsController, type: :request do
       expect(Transaction.count).to eq(transaction_count)
       expect(user_2.account.balance).to eq(user_2_balance)
     end
+
+    it "should not accept a non pending request" do
+      request.status = Request.statuses[:accepted]
+      request.save
+      post_count = ConversationPost.count
+      transaction_count = Transaction.count
+      post "/api/v1/conversations/#{conversation.id}/requests/#{request.id}/accept", {api_key:  api_key}, header_for_user(user_2)
+      expect(response).to have_http_status(400)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).to have_key("errors")
+      expect(parsed_body).not_to have_key("post")
+      expect(parsed_body).not_to have_key("request")
+      expect(parsed_body).not_to have_key("transaction")
+      expect(ConversationPost.count).to eq(post_count)
+      expect(Transaction.count).to eq(transaction_count)
+    end
+  end
+  describe "reject request" do
+
   end
 end
