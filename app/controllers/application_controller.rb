@@ -45,7 +45,7 @@ class ApplicationController < ActionController::API
   end
 
   def failed_login
-    render json: {errors: "Wrong email/password"},:status => 401
+    render json: {errors: ["Wrong email/password"]},:status => 401
   end
 
   def wrong_api_key!
