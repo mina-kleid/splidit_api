@@ -35,7 +35,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :bank_accounts, :except => [:new,:edit,:destroy] do
+      resources :bank_accounts, path: 'accounts', :except => [:new,:edit,:destroy] do
         member do
           post "withdraw" => "bank_accounts#withdraw"
           post "deposit" => "bank_accounts#deposit"
