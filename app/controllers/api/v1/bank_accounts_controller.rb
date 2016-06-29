@@ -4,12 +4,12 @@ class Api::V1::BankAccountsController < ApplicationController
 
   def show
     @account = current_user.bank_accounts.find(params[:id])
-    render :json => @account,serializer: BankAccountSerializer
+    render :json => @account, serializer: BankAccountSerializer
   end
 
   def index
     @accounts = current_user.bank_accounts
-    render :json => @accounts,each_serializer: BankAccountSerializer
+    render :json => @accounts, each_serializer: BankAccountSerializer, root: :accounts
   end
 
   def create

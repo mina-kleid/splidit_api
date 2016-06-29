@@ -44,6 +44,7 @@ describe Api::V1::BankAccountsController, type: :request do
       parsed_body = JSON.parse(response.body)
       expect(parsed_body).not_to be_empty
       expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("account")
     end
 
     it "should not create a bank account with faulty account number" do
@@ -72,9 +73,38 @@ describe Api::V1::BankAccountsController, type: :request do
     end
   end
 
+  describe "list all bank accounts" do
+
+    let!(:bank_account_1) {create(:bank_account, user: user)}
+    let!(:bank_account_2) {create(:bank_account, user: user)}
+
+    it "should list all bank accounts" do
+      get "/api/v1/accounts", {api_key:  api_key}, header_for_user(user)
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("accounts")
+      expect(parsed_body["accounts"].count).to eq(2)
+    end
+  end
+
+  describe "show bank account" do
+
+    let!(:bank_account) {create(:bank_account, user: user)}
+
+    it "should show the bank account" do
+      get "/api/v1/accounts/#{bank_account.id}", {api_key:  api_key}, header_for_user(user)
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("account")
+    end
+  end
+
   describe "Withdraw from account to user" do
 
-    let!(:user) {create(:user)}
     let!(:bank_account) {create(:bank_account, user: user)}
 
     it "withdraw to the user balance" do
