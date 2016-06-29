@@ -10,14 +10,18 @@ describe Api::V1::BankAccountsController, type: :request do
 
     it "should create a bank account for the user" do
       iban = 'DE89370400440532013000'
-      post "/api/v1/bank_accounts", {api_key:  api_key, account: {iban: iban, account_holder: user.name}}, header_for_user(user)
+      post "/api/v1/accounts", {api_key:  api_key, account: {iban: iban, account_holder: user.name}}, header_for_user(user)
       expect(response).to have_http_status(:created)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("account")
       expect(user.bank_accounts.first.iban).to eq(iban)
     end
 
     it "should not create a bank account with a faulty iban" do
       iban = 'faultyiban'
-      post "/api/v1/bank_accounts", {api_key:  api_key, account: {iban: iban, account_holder: user.name}}, header_for_user(user)
+      post "/api/v1/accounts", {api_key:  api_key, account: {iban: iban, account_holder: user.name}}, header_for_user(user)
       parsed_body = JSON.parse(response.body)
       expect(response).to have_http_status(400)
       expect(parsed_body).not_to be_empty
@@ -33,7 +37,7 @@ describe Api::V1::BankAccountsController, type: :request do
       iban = 'DE89370400440532013000'
       account_number = "532013000"
       blz = "37040044"
-      post "/api/v1/bank_accounts", {api_key:  api_key, account: {account_number: account_number, blz: blz}}, header_for_user(user)
+      post "/api/v1/accounts", {api_key:  api_key, account: {account_number: account_number, blz: blz}}, header_for_user(user)
       expect(response).to have_http_status(:created)
       expect(user.bank_accounts).not_to be_empty
       expect(user.bank_accounts.first.iban).to eq(iban)
@@ -45,7 +49,7 @@ describe Api::V1::BankAccountsController, type: :request do
     it "should not create a bank account with faulty account number" do
       account_number = "532013000122"
       blz = "37040044"
-      post "/api/v1/bank_accounts", {api_key:  api_key, account: {account_number: account_number, blz: blz}}, header_for_user(user)
+      post "/api/v1/accounts", {api_key:  api_key, account: {account_number: account_number, blz: blz}}, header_for_user(user)
       expect(response).to have_http_status(400)
       expect(user.bank_accounts).to be_empty
       parsed_body = JSON.parse(response.body)
@@ -59,7 +63,7 @@ describe Api::V1::BankAccountsController, type: :request do
 
     it "should not create bank account with missing bank code" do
       account_number = "532013000"
-      post "/api/v1/bank_accounts", {api_key:  api_key, account: {account_number: account_number}}, header_for_user(user)
+      post "/api/v1/accounts", {api_key:  api_key, account: {account_number: account_number}}, header_for_user(user)
       expect(response).to have_http_status(400)
       expect(user.bank_accounts).to be_empty
       parsed_body = JSON.parse(response.body)
@@ -77,7 +81,7 @@ describe Api::V1::BankAccountsController, type: :request do
       transactions_count = Transaction.count
       user_old_balance = user.account.balance
       amount = 10
-      post "/api/v1/bank_accounts/#{bank_account.id}/withdraw", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      post "/api/v1/accounts/#{bank_account.id}/withdraw", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
       user.reload
       expect(response).to have_http_status(:success)
       parsed_body = JSON.parse(response.body)
@@ -94,7 +98,7 @@ describe Api::V1::BankAccountsController, type: :request do
       transactions_count = Transaction.count
       user_old_balance = user.account.balance
       amount = 10
-      post "/api/v1/bank_accounts/#{bank_account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      post "/api/v1/accounts/#{bank_account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
       user.reload
       expect(response).to have_http_status(:success)
       parsed_body = JSON.parse(response.body)
@@ -111,7 +115,7 @@ describe Api::V1::BankAccountsController, type: :request do
       transactions_count = Transaction.count
       user_old_balance = user.account.balance
       amount = 100.1
-      post "/api/v1/bank_accounts/#{bank_account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
+      post "/api/v1/accounts/#{bank_account.id}/deposit", {api_key:  api_key, transaction: {amount: amount}}, header_for_user(user)
       user.reload
       expect(response).to have_http_status(400)
       parsed_body = JSON.parse(response.body)
