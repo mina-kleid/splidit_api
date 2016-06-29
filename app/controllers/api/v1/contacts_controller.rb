@@ -16,6 +16,6 @@ class Api::V1::ContactsController < ApplicationController
 
 
   def permitted_params
-    params.require(:contacts).permit(phone_numbers:[])
+    params.require(:contacts).permit(:phone_numbers, phone_numbers:[])
   end
 end
