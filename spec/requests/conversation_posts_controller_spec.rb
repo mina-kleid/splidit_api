@@ -20,7 +20,7 @@ describe Api::V1::ConversationPostsController, type: :request do
       expect(parsed_body).not_to have_key("errors")
       expect(parsed_body["post"]).not_to be_empty
       expect(@conversation.posts.count).to eq(old_posts_count + 1)
-      expect(@conversation.posts.first.text).to eq(post_text)
+      expect(@conversation.posts.last.text).to eq(post_text)
     end
   end
   describe "retrieves the conversation and its posts" do
@@ -42,7 +42,7 @@ describe Api::V1::ConversationPostsController, type: :request do
       expect(parsed_body["posts"].count).to be(15)
       posts = parsed_body["posts"]
       expect(posts[0]["id"]).to eq(@first_post_id)
-      expect(posts[0]["created_at"]).to be > (posts[1]["created_at"])
+      expect(posts[0]["created_at"]).to be < (posts[1]["created_at"])
 
     end
     it "should fetch the first page of conversations ordered chronologically" do
@@ -50,7 +50,7 @@ describe Api::V1::ConversationPostsController, type: :request do
       expect(response).to have_http_status(:success)
       parsed_body = JSON.parse(response.body)
       posts = parsed_body["posts"]
-      expect(posts[0]["id"]).to eq(@first_post_id - 15)
+      expect(posts[0]["id"]).to eq(@first_post_id + 15 )
     end
   end
 end

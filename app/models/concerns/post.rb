@@ -11,7 +11,7 @@ module Post
     validates_presence_of :text, unless: :amount?
     validates_presence_of :amount, unless: :text?
 
-    default_scope {order('created_at DESC')}
+    default_scope {order('created_at ASC')}
     self.per_page = 15
   end
 

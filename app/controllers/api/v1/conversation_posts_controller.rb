@@ -10,7 +10,7 @@ class Api::V1::ConversationPostsController < ApplicationController
     else
       @posts = @conversation.posts.all
     end
-    render :json => @posts, root: 'posts', each_serializer: PostSerializer and return
+    render :json =>  {conversation: @conversation, posts: @posts} and return
   end
 
   def create
