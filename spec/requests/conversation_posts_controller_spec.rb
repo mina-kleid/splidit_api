@@ -56,5 +56,13 @@ describe Api::V1::ConversationPostsController, type: :request do
       expect(parsed_body["posts"].size).to be(size)
       expect(posts[size - 1]["id"]).to eq(@last_post_id - @first_page_size )
     end
+
+    it "should fetch all posts when there is no page params" do
+      get "/api/v1/conversations/#{@conversation.id}/posts",{api_key:  api_key, post: {page: ''}}, header_for_user(@user_1)
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      size = @conversation.posts.count
+      expect(parsed_body["posts"].size).to be(size)
+    end
   end
 end
