@@ -6,7 +6,9 @@ class Api::V1::ConversationPostsController < ApplicationController
     @conversation = current_user.conversations.find(params[:conversation_id])
     #TODO remove this when implemented on phone
     if permitted_params[:page].present?
-      @posts = @conversation.posts.paginate(page: permitted_params[:page])
+      page = permitted_params[:page]
+      reversed_page = ConversationPost.reverse_pagination(page)
+      @posts = @conversation.posts.paginate(page: reversed_page)
     else
       @posts = @conversation.posts.all
     end

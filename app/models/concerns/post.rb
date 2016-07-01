@@ -13,6 +13,15 @@ module Post
 
     default_scope {order('created_at ASC')}
     self.per_page = 15
+
+    def self.reverse_pagination(page)
+      pages = (self.count.to_f / self.per_page.to_f).ceil
+      puts pages
+      return -1 if page > pages
+      return pages if pages <= 1
+      return pages - page + 1
+
+    end
   end
 
 end
