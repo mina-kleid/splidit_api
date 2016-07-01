@@ -15,4 +15,12 @@ class Conversation < ActiveRecord::Base
     (self.users - [user]).first
   end
 
+  def reverse_pagination(page)
+    pages = (self.posts.count.to_f / ConversationPost.per_page.to_f).ceil
+    return -1 if page > pages
+    return pages if pages <= 1
+    reversed_page = pages - page + 1
+    return reversed_page
+  end
+
 end

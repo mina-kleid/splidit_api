@@ -30,7 +30,9 @@ describe Api::V1::ConversationPostsController, type: :request do
       @user_2 = create(:user)
       @conversation = create(:conversation, :with_posts, first_user: @user_1, second_user: @user_2)
       @page = 1
-      @first_post_id = @conversation.posts.first.id
+      @last_post_id = @conversation.posts.last.id
+      @last_page = (@conversation.posts.count.to_f / ConversationPost.per_page.to_f).ceil
+      @first_page_size = @conversation.posts.paginate(page: @last_page).to_a.size
     end
     it "should fetch the first page of conversations ordered chronologically" do
       get "/api/v1/conversations/#{@conversation.id}/posts",{api_key:  api_key, post: {page: @page}}, header_for_user(@user_1)
@@ -39,18 +41,20 @@ describe Api::V1::ConversationPostsController, type: :request do
       expect(parsed_body).not_to be_empty
       expect(parsed_body).not_to have_key("errors")
       expect(parsed_body["posts"]).not_to be_empty
-      expect(parsed_body["posts"].count).to be(15)
+      expect(parsed_body["posts"].size).to be(@first_page_size)
       posts = parsed_body["posts"]
-      expect(posts[0]["id"]).to eq(@first_post_id)
+      expect(posts[@first_page_size - 1]["id"]).to eq(@last_post_id)
       expect(posts[0]["created_at"]).to be < (posts[1]["created_at"])
 
     end
-    it "should fetch the first page of conversations ordered chronologically" do
+    it "should fetch the second page of conversations ordered chronologically" do
       get "/api/v1/conversations/#{@conversation.id}/posts",{api_key:  api_key, post: {page: @page + 1}}, header_for_user(@user_1)
       expect(response).to have_http_status(:success)
       parsed_body = JSON.parse(response.body)
       posts = parsed_body["posts"]
-      expect(posts[0]["id"]).to eq(@first_post_id + 15 )
+      size = @conversation.posts.paginate(page: @last_page - 1).to_a.size
+      expect(parsed_body["posts"].size).to be(size)
+      expect(posts[size - 1]["id"]).to eq(@last_post_id - @first_page_size )
     end
   end
 end
