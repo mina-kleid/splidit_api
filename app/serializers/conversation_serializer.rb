@@ -4,12 +4,17 @@ class ConversationSerializer < ActiveModel::Serializer
   has_many :posts
 
   def posts
-    if serialization_options[:show_all_posts]
-      object.posts
-    elsif serialization_options[:show_paged_posts]
-      object.posts.page(serialization_options[:page])
-    else
       object.posts.limit(1)
-    end
   end
+
+  def user1_id
+    return object.user1_id if serialization_options[:current_user_id].equal?(object.user1_id)
+    return object.user2_id
+  end
+
+  def user2_id
+    return object.user2_id unless serialization_options[:current_user_id].equal?(object.user2_id)
+    return object.user1_id
+  end
+
 end

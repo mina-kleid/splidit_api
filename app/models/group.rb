@@ -1,19 +1,19 @@
 class Group < ActiveRecord::Base
 
   attr_accessor :name,:type,:description,:creator,:sum_per_person
-  attr_reader :balance
 
+  has_one :account, as: :owner
   has_many :posts, :as => :target
-
   has_many :user_groups
   has_many :users,:through => :user_groups
 
   has_one :creator, :class_name => "User",:foreign_key => :creator_id
 
-  validates :balance, :numericality => { :greater_than_or_equal_to => 0 }
-
 
   enum type: [:sum_per_person, :open_pot]
+
+  after_create :create_account
+
 
   def sent_transactions
     Transaction.where(:sender_id => self.id,:sender_type => "Group")
@@ -45,6 +45,16 @@ class Group < ActiveRecord::Base
   def set_admins(admin_ids)
     puts admin_ids.inspect
     self.user_groups.map { |ug| ug[:is_admin] = true if admin_ids.include?(ug.user_id)}
+  end
+
+
+  private
+
+
+  def create_account
+    account = Account.new
+    account.owner = self
+    account.save
   end
 
 end

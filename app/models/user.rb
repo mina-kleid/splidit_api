@@ -4,8 +4,10 @@ class User < ActiveRecord::Base
 
   before_create :generate_authentication_token
   before_validation :modify_phone_number
+  after_create :create_account
 
-  has_many :accounts
+  has_many :bank_accounts
+  has_one :account, as: :owner
   has_many :transactions,:as => :source
   has_many :source_requests, :as => :source,:class_name => "Request"
   has_many :target_requests, :as => :target,:class_name => "Request"
@@ -16,18 +18,17 @@ class User < ActiveRecord::Base
   validates :email, email: true
   validates_length_of :password, minimum: 6
   validates_length_of :pin, is: 4, allow_nil: true
-  validates :balance, :numericality => { :greater_than_or_equal_to => 0 }
 
   def conversations
     Conversation.where("user1_id = ? or user2_id = ?",self.id,self.id)
   end
 
   def sent_requests
-    Request.where(:sender_id => self.id,:sender_type => "User")
+    Request.where(source: self.account)
   end
 
   def received_requests
-    Request.where(:receiver_id => self.id,:receiver_type => "User")
+    Request.where(target: self.account)
   end
 
   def authenticate(password)
@@ -59,7 +60,17 @@ class User < ActiveRecord::Base
     self.encrypted_password = BCrypt::Engine.hash_secret(new_password,salt)
   end
 
+  def balance
+    self.account.balance
+  end
+
   private
+
+  def create_account
+    account = Account.new
+    account.owner = self
+    account.save
+  end
 
   def modify_phone_number
     phone_number = Phonelib.parse(self.phone).international

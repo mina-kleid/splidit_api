@@ -25,25 +25,20 @@ Rails.application.routes.draw do
       end
 
       resources :conversations, :except => [:new,:edit,:destroy] do
-        resources :posts, :only => :create
-        resources :transactions, :only => :create
-        resources :requests, :only => :create
-        # post "transaction" => "conversations#transaction"
-        # post "request" => "conversations#request"
-      end
-
-      resources :requests, :only =>[:index] do
-        member do
-          post "accept" => "requests#accept"
-          post "reject" => "requests#reject"
+        resources :conversation_posts,path: 'posts', :only => [:create, :index]
+        resources :conversation_transactions,path: 'transactions', :only => :create
+        resources :conversation_requests,path: 'requests', :only => :create do
+          member do
+            post "accept" => "conversation_requests#accept"
+            post "reject" => "conversation_requests#reject"
+          end
         end
-
       end
 
-      resources :accounts, :except => [:new,:edit,:destroy] do
+      resources :bank_accounts, path: 'accounts', :except => [:new,:edit,:destroy] do
         member do
-          post "withdraw" => "accounts#withdraw"
-          post "deposit" => "accounts#deposit"
+          post "withdraw" => "bank_accounts#withdraw"
+          post "deposit" => "bank_accounts#deposit"
         end
       end
     end

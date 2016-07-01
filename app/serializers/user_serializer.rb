@@ -6,4 +6,8 @@ class UserSerializer < ActiveModel::Serializer
     @object.authentication_token
   end
 
+  def balance
+    @object.account.balance
+  end
+
 end

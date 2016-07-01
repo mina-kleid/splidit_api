@@ -1,45 +1,45 @@
 class RequestServiceObject
 
-  def self.create(source, target, amount, post_target,text)
-    request = Request.new(:source => source, :target => target, :amount => amount, :status => Request.statuses[:pending], text: text)
-    post = Post.new(:user => source, :target => post_target, amount: amount, :post_type => Post.post_types[:request])
-    Request.transaction do
-      request.save
-      post.save
-    end
-    return [post,request]
-  end
-
-  def self.accept(request, post_target)
-    if request.pending?
-      success , error_message = TransactionServiceObject.create(request.source, request.target, request.amount, request.text)
-      if success
-        post = Post.new(:user => request.target, :target => post_target, amount: request.amount, :post_type => Post.post_types[:request_accepted])
-        request.status = Request.statuses[:accepted]
-        request.status_changed_at = DateTime.now
-        Request.transaction do
-          request.save
-          post.save
-        end
-        return [true,post]
+  def self.create(source_account, target_account, amount,text)
+    request = Request.new(:source => source_account, :target => target_account, :amount => amount, :status => Request.statuses[:pending], text: text)
+    begin
+      Request.transaction(requires_new: true) do
+        request.save!
       end
-      return [false,error_message]
+    rescue StandardError => e
+      raise RequestNotCompletedError.new(e.message)
     end
-    return [false,"Request is not in Pending state"]
+    return request
   end
 
-  def self.reject(request, post_target)
-    if request.pending?
+  def self.accept(request)
+    transaction = nil
+    begin
+      Request.transaction(requires_new: true) do
+        transaction = TransactionServiceObject.create(request.target.owner, request.source.owner, request.amount, request.text)
+        request.update_attributes!({status: Request.statuses[:accepted], status_changed_at: DateTime.now})
+      end
+    rescue Errors::InsufficientFundsError => e
+      raise e
+    rescue Errors::TransactionNotCompletedError => e
+      raise e
+    rescue StandardError => e
+      raise Errors::RequestNotAcceptedError.new(e.message)
+    end
+    return transaction
+  end
+
+  def self.reject(request)
       request.status = Request.statuses[:rejected]
       request.status_changed_at = DateTime.now
-      post = Post.new(:user => request.target, :target => post_target, amount: request.amount, :post_type => Post.post_types[:request_rejected])
-      Request.transaction do
-        request.save
-        post.save
+      begin
+        Request.transaction(requires_new: true) do
+          request.save!
+        end
+      rescue StandardError => e
+        raise RequestNotRejectedError.new(e.message)
       end
-      return [true,post]
-    end
-    return [false,"Request is not in pending state"]
+      return true
   end
 
 end
