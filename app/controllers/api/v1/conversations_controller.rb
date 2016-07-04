@@ -17,11 +17,11 @@ class Api::V1::ConversationsController < ApplicationController
     conversation_ids = current_user.conversations.where("user1_id = ? or user2_id = ?",@second_user.id,@second_user.id).pluck(:id)
     if conversation_ids.any?
       @conversation = Conversation.find(conversation_ids.first)
-      render :json => @conversation, current_user_id: current_user.id and return
+      render :json => @conversation, current_user_id: current_user.id, status: status_created and return
     end
     @conversation = Conversation.new(:first_user => current_user,:second_user => @second_user)
     if @conversation.save
-      render :json => @conversation, current_user_id: current_user.id and return
+      render :json => @conversation, current_user_id: current_user.id, status: status_created and return
     end
     return api_error(@conversation.errors.full_messages)
   end
