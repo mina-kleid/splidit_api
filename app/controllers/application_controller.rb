@@ -53,7 +53,10 @@ class ApplicationController < ActionController::API
   end
 
   def api_error(errors)
-    render :json => {:errors =>errors}, :status => 400
+    unless errors.is_a?(Array)
+      errors = [errors]
+    end
+    render json: {errors: errors}, status: 400
   end
 
   def status_created
