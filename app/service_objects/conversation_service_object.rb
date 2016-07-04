@@ -1,7 +1,7 @@
 class ConversationServiceObject
 
   def self.create_request(source, target, conversation, amount, text)
-    post = ConversationPost.new(:user => source, :conversation => conversation, amount: amount, :post_type => ConversationPost.post_types[:request])
+    post = ConversationPost.new(:user => source, :conversation => conversation, text: text, amount: amount, :post_type => ConversationPost.post_types[:request])
     request = nil
     begin
       ActiveRecord::Base.transaction(requires_new: true) do
@@ -50,7 +50,7 @@ class ConversationServiceObject
   end
 
   def self.create_transaction(source, target, conversation, amount, text)
-    post = ConversationPost.new(:user => source, :conversation => conversation, amount: amount, :post_type => ConversationPost.post_types[:transactions])
+    post = ConversationPost.new(:user => source, :conversation => conversation, text: text, amount: amount, :post_type => ConversationPost.post_types[:transactions])
     transaction = nil
     begin
       ActiveRecord::Base.transaction(requires_new: true) do
