@@ -35,7 +35,7 @@ class Api::V1::BankAccountsController < ApplicationController
     @account = current_user.bank_accounts.find(params[:id])
     begin
       BankAccountTransactionServiceObject.withdraw_from_bank_account(@account, current_user, transaction_params[:amount].to_d.abs)
-      render :json => {:balance => current_user.balance} and return
+      render :json => {:balance => current_user.balance}, status: status_created and return
     rescue StandardError => e
       return api_error(e.message)
     end
@@ -45,7 +45,7 @@ class Api::V1::BankAccountsController < ApplicationController
     @account = current_user.bank_accounts.find(params[:id])
     begin
       BankAccountTransactionServiceObject.deposit_to_bank_account(@account, current_user, transaction_params[:amount].to_d.abs)
-      render :json => {:balance => current_user.balance} and return
+      render :json => {:balance => current_user.balance}, status: status_created and return
     rescue StandardError => e
       return api_error(e.message)
     end
