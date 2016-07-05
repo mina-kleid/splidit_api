@@ -1,5 +1,5 @@
 class ChangePostTable < ActiveRecord::Migration
   def change
-    rename_table :posts, :convesration_posts
+    rename_table :posts, :conversation_posts
   end
 end
