@@ -33,20 +33,22 @@ class Api::V1::BankAccountsController < ApplicationController
 
   def withdraw
     @account = current_user.bank_accounts.find(params[:id])
-    result = BankAccountTransactionServiceObject.withdraw_from_account(@account, current_user, transaction_params[:amount].to_d.abs)
-    if result
+    begin
+      BankAccountTransactionServiceObject.withdraw_from_bank_account(@account, current_user, transaction_params[:amount].to_d.abs)
       render :json => {:balance => current_user.balance} and return
+    rescue StandardError => e
+      return api_error(e.message)
     end
-    return api_error(transaction: ["Transaction didnt work"])
   end
 
   def deposit
     @account = current_user.bank_accounts.find(params[:id])
-    result = BankAccountTransactionServiceObject.deposit_to_account(@account, current_user, transaction_params[:amount].to_d.abs)
-    if result
+    begin
+      BankAccountTransactionServiceObject.deposit_to_bank_account(@account, current_user, transaction_params[:amount].to_d.abs)
       render :json => {:balance => current_user.balance} and return
+    rescue StandardError => e
+      return api_error(e.message)
     end
-    return api_error(transaction: ["Insufficient funds"])
   end
 
 

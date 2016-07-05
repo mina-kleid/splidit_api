@@ -60,7 +60,7 @@ describe Api::V1::BankAccountsController, type: :request do
     end
   end
 
-  describe "create bank account with missing date" do
+  describe "create bank account with missing data" do
 
     it "should not create bank account with missing bank code" do
       account_number = "532013000"
