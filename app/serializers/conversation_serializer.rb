@@ -4,7 +4,7 @@ class ConversationSerializer < ActiveModel::Serializer
   has_many :posts
 
   def posts
-      object.posts.limit(1)
+      object.posts.last(1)
   end
 
   def user1_id
