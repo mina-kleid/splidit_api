@@ -1,5 +1,6 @@
 module Errors
   class InsufficientFundsError < StandardError; end
+  class TransactionAmountMustBePositive < StandardError; end
   class TransactionNotCompletedError < StandardError; end
   class RequestNotCompletedError < StandardError; end
   class RequestNotAcceptedError < StandardError; end

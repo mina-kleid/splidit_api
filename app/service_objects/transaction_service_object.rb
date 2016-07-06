@@ -1,6 +1,7 @@
 class TransactionServiceObject
 
   def self.create(source, target, amount, text)
+    raise Errors::TransactionAmountMustBePositive.new("Amount must be higher than zero") and return if amount <= 0
     source_account = source.account
     target_account = target.account
     raise Errors::InsufficientFundsError.new("Insufficient funds") and return if source_account.balance - amount < 0

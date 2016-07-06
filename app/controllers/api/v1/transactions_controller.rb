@@ -4,7 +4,7 @@ class Api::V1::TransactionsController < ApplicationController
 
   def index
     transactions = current_user.transactions
-    render json: {transactions: transactions}, status: status_success and return
+    render json: transactions, each_serailizer: TransactionSerializer, status: status_success and return
   end
 
 end
