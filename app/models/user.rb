@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   has_one :account, as: :owner
-  has_many :transactions,:as => :source
+
   has_many :source_requests, :as => :source,:class_name => "Request"
   has_many :target_requests, :as => :target,:class_name => "Request"
 
@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
 
   def received_requests
     Request.where(target: self.account)
+  end
+
+  def transactions
+    self.account.transactions
   end
 
   def authenticate(password)

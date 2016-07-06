@@ -21,8 +21,9 @@ Rails.application.routes.draw do
         collection do
           post "sync" => "contacts#sync"
         end
-
       end
+
+      resources :transactions, only: [:index]
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :conversation_posts,path: 'posts', :only => [:create, :index]
