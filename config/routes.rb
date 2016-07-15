@@ -27,7 +27,7 @@ Rails.application.routes.draw do
 
       resources :conversations, :except => [:new,:edit,:destroy] do
         resources :conversation_posts,path: 'posts', :only => [:create, :index]
-        resources :conversation_transactions,path: 'transactions', :only => :create
+        resources :conversation_transactions,path: 'transactions', :only => [:create, :index]
         resources :conversation_requests,path: 'requests', :only => :create do
           member do
             post "accept" => "conversation_requests#accept"

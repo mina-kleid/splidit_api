@@ -37,4 +37,26 @@ describe Api::V1::ConversationRequestsController, type: :request do
       expect(parsed_body).not_to have_key("transaction")
     end
   end
+
+  describe "index transactions" do
+    let!(:user_1) {create(:user)}
+    let!(:user_2) {create(:user)}
+    let!(:user_3) {create(:user)}
+    let!(:conversation) {create(:conversation, first_user: user_1, second_user: user_2)}
+    let!(:transactions) {create_list(:transaction, 5, :credit, source: user_1.account, target: user_2.account)}
+    let!(:other_transactions) {create_list(:transaction, 5, :credit, source: user_3.account, target: user_2.account)}
+
+    it "should return all transactions in the conversation" do
+      get "/api/v1/conversations/#{conversation.id}/transactions", {api_key:  api_key}, header_for_user(user_1)
+      expect(response).to have_http_status(:success)
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body).not_to be_empty
+      expect(parsed_body).not_to have_key("errors")
+      expect(parsed_body).to have_key("conversation")
+      expect(parsed_body).to have_key("transactions")
+      transactionsJSON = parsed_body["transactions"]
+      expect(transactionsJSON.size).to eq(transactions.size)
+    end
+
+  end
 end

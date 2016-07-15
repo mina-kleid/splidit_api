@@ -2,6 +2,13 @@ class Api::V1::ConversationTransactionsController < ApplicationController
 
   before_filter :authenticate_user!
 
+  def index
+    conversation = current_user.conversations.find(params[:conversation_id])
+    transactions = conversation.transactions
+    serialzed_transactions = ActiveModel::ArraySerializer.new(transactions, each_serialzer: TransactionSerializer)
+    render json: {conversation: ConversationSerializer.new(conversation), transactions: serialzed_transactions}, status: status_success and return
+  end
+
   def create
     conversation = current_user.conversations.find(params[:conversation_id])
     other_user = conversation.other_user(current_user)
