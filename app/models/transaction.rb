@@ -5,4 +5,6 @@ class Transaction < ActiveRecord::Base
 
   enum transaction_type: [:debit, :credit]
 
+  default_scope {order('created_at DESC')}
+
 end
