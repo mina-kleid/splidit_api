@@ -26,7 +26,7 @@ class Api::V1::UsersController < ApplicationController
 
   def device_token
     if current_user.update_attribute(:device_token,device_token_params[:device_token])
-      render :json => {:user => {:device_token => current_user.device_token} },:root => false and return
+      render :json => {:user => {:device_token => current_user.device_token} },:root => false, status: status_created and return
     end
     return api_error(:user =>{:device_token => "Device token couldnt be updated"})
   end
