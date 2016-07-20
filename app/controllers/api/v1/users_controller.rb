@@ -20,7 +20,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.update_attributes(permitted_update_params)
       render :json => @user, status: status_success and return
     else
-      render :json => {:errors => @user.errors.full_messages}, :status => 400 and return
+      render :json => {:errors => @user.errors.full_messages}, :status => status_success and return
     end
   end
 
