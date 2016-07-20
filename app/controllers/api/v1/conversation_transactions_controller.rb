@@ -4,7 +4,7 @@ class Api::V1::ConversationTransactionsController < ApplicationController
 
   def index
     conversation = current_user.conversations.find(params[:conversation_id])
-    transactions = conversation.transactions
+    transactions = conversation.transactions(current_user)
     serialzed_transactions = ActiveModel::ArraySerializer.new(transactions, each_serialzer: TransactionSerializer)
     render json: {conversation: ConversationSerializer.new(conversation), transactions: serialzed_transactions}, status: status_success and return
   end

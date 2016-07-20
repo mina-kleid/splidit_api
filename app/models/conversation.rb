@@ -23,10 +23,10 @@ class Conversation < ActiveRecord::Base
     return reversed_page
   end
 
-  def transactions
-    first_user_account_id = self.first_user.account.id
-    second_user_account_id = self.second_user.account.id
-    Transaction.where("(source_id = ? or source_id = ?) and (target_id = ? or target_id = ?)", first_user_account_id, second_user_account_id, first_user_account_id, second_user_account_id )
+  def transactions(user)
+    first_user_account_id = user.account.id
+    second_user_account_id = self.other_user(user).account.id
+    Transaction.where("(source_id = ?) and (target_id = ?)", first_user_account_id, second_user_account_id)
   end
 
 end
