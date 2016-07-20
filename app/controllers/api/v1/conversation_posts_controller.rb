@@ -23,8 +23,7 @@ class Api::V1::ConversationPostsController < ApplicationController
     @post.conversation = @conversation
     @post.post_type = ConversationPost.post_types[:text]
     if @post.save
-      APNS.send_notification(other_user.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                             :other => {:conversation_id => @conversation.id}) unless other_user.device_token.nil?
+      PushNotificationServiceObject.sendNotification(other_user, @conversation, @post.text)
       render :json => PostSerializer.new(@post), status: status_created and return
     end
     return api_error(@post.errors.full_messages)

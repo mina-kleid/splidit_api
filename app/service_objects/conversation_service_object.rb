@@ -13,8 +13,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise Errors::RequestNotCompletedError
     end
-    APNS.send_notification(target.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless target.device_token.nil?
+    PushNotificationServiceObject.sendNotification(target, conversation, "You have a new money request")
     return [post, request]
   end
 
@@ -29,8 +28,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    APNS.send_notification(request.source.owner.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless request.source.owner.device_token.nil?
+    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, "Request accepted")
     return [post, transaction]
   end
 
@@ -44,8 +42,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    APNS.send_notification(request.source.owner.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless request.source.owner.device_token.nil?
+    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, "Request rejected")
     return post
   end
 
@@ -60,8 +57,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    APNS.send_notification(target.device_token, :alert => 'You have received a new post', :badge => 1, :sound => 'default',
-                           :other => {:conversation_id => conversation.id}) unless target.device_token.nil?
+    PushNotificationServiceObject.sendNotification(target, conversation, "You have received money")
     return [post, transaction]
   end
 
