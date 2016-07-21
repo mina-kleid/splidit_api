@@ -13,7 +13,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise Errors::RequestNotCompletedError
     end
-    PushNotificationServiceObject.sendNotification(target, conversation, "You have a new money request")
+    PushNotificationServiceObject.sendNotification(target, conversation, post)
     return [post, request]
   end
 
@@ -28,7 +28,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, "Request accepted")
+    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, post)
     return [post, transaction]
   end
 
@@ -42,7 +42,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, "Request rejected")
+    PushNotificationServiceObject.sendNotification(request.source.owner, conversation, post)
     return post
   end
 
@@ -57,7 +57,7 @@ class ConversationServiceObject
     rescue StandardError => e
       raise e
     end
-    PushNotificationServiceObject.sendNotification(target, conversation, "You have received money")
+    PushNotificationServiceObject.sendNotification(target, conversation, post)
     return [post, transaction]
   end
 

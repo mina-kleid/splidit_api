@@ -23,7 +23,7 @@ class Api::V1::ConversationPostsController < ApplicationController
     @post.conversation = @conversation
     @post.post_type = ConversationPost.post_types[:text]
     if @post.save
-      PushNotificationServiceObject.sendNotification(other_user, @conversation, @post.text)
+      PushNotificationServiceObject.sendNotification(other_user, @conversation, @post)
       render :json => PostSerializer.new(@post), status: status_created and return
     end
     return api_error(@post.errors.full_messages)
