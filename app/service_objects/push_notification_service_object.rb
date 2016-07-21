@@ -12,15 +12,15 @@ class PushNotificationServiceObject
 
   def self.alert_text(post)
     case post.post_type
-      when post.post_types[:text]
+      when ConversationPost.post_types[:text]
         return post.text
-      when post.post_types[:transactions]
+      when ConversationPost.post_types[:transactions]
         return "You have received money"
-      when post.post_types[:request]
+      when ConversationPost.post_types[:request]
         return "You have a new money request"
-      when post.post_types[:request_accepted]
+      when ConversationPost.post_types[:request_accepted]
         return "Your money request have been accepted"
-      when post.post_types[:request_rejected]
+      when ConversationPost.post_types[:request_rejected]
         return "Your money request have been rejected"
     end
   end
