@@ -4,6 +4,10 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
+  resources :beta_users, only: [:new, :create] do
+    get "success" => "beta_users#success", on: :collection
+  end
+
   namespace :api do
     namespace :v1 do
       get "test" => "test#test"
