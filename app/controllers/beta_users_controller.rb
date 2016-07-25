@@ -1,6 +1,7 @@
 class BetaUsersController < ActionController::Base
 
   after_filter :allow_iframe
+  layout 'application'
 
   def new
     @beta_user = BetaUser.new

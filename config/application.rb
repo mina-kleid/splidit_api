@@ -20,5 +20,7 @@ module SpliditApi
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.assets.enabled = true
+    config.assets.compile = true
   end
 end
