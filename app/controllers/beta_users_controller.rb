@@ -1,5 +1,6 @@
 class BetaUsersController < ActionController::Base
 
+  after_filter :allow_iframe
 
   def new
     @beta_user = BetaUser.new
@@ -26,6 +27,11 @@ class BetaUsersController < ActionController::Base
 
   def permitted_params
     params.require(:beta_user).permit(:first_name, :last_name, :email)
+  end
+
+
+  def allow_iframe
+    response.headers.delete "X-Frame-Options"
   end
 
 end
