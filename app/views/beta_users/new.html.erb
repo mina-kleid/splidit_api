@@ -1,8 +1,8 @@
 <%= simple_form_for @beta_user do |f| %>
 
-      <%= f.input :first_name %>
-      <%= f.input :last_name %>
-      <%= f.input :email %>
+      <%= f.input :first_name, placeholder: "First name", label: false %>
+      <%= f.input :last_name, placeholder: "Last name", label: false %>
+      <%= f.input :email, placeholder: "Email", label: false %>
 
 
       <%= f.submit%>
