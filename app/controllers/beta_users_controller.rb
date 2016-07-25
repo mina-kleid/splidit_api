@@ -1,3 +1,5 @@
+require 'mailchimp'
+
 class BetaUsersController < ActionController::Base
 
   after_filter :allow_iframe
@@ -10,8 +12,9 @@ class BetaUsersController < ActionController::Base
 
   def create
     @beta_user = BetaUser.new(permitted_params)
-    puts @beta_user.inspect
     if @beta_user.save
+      mailchimp = Mailchimp::API.new(MAILCHIMP_API_KEY)
+      mailchimp.lists.subscribe(MAILCHIMP_LIST_ID, {email: @beta_user.email}, {first_name: @beta_user.first_name, last_name: @beta_user.last_name}, double_optin = false, send_welcome = false)
       redirect_to success_beta_users_path
     else
       render :new

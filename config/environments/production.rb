@@ -75,9 +75,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  MAILCHIMP-API-KEY = "9f272d75a636f8d38be3b0663fcc2ea2-us10"
-
-  MAILCHIMP-LIST-ID = "3bad0cc1bd"
-  #Production list id  003bcdbd88
 end
+MAILCHIMP_API_KEY = "9f272d75a636f8d38be3b0663fcc2ea2-us10"
+
+MAILCHIMP_LIST_ID = "3bad0cc1bd"
+#Production list id  003bcdbd88
