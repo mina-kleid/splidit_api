@@ -7,7 +7,8 @@ class BetaUsersController < ActionController::Base
   end
 
   def create
-    @beta_user = BetaUser.new(permitted_params[:beta_user])
+    @beta_user = BetaUser.new(permitted_params)
+    puts @beta_user.inspect
     if @beta_user.save
       redirect_to success_beta_users_path
     else

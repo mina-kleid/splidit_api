@@ -27,6 +27,7 @@ gem 'rails_12factor', group: :production
 
 # gems for the beta register form, to be removed later
 gem 'mailchimp-api', '~> 2.0', '>= 2.0.6'
+gem 'formtastic', '~> 3.0'
 
 group :development, :test do
   gem 'rspec-rails'

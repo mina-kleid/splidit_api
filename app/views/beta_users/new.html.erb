@@ -1,8 +1,11 @@
-<%= form_for @beta_user do |f| %>
-    <%= f.text_field :first_name %>
-    <%= f.text_field :last_name %>
-    <%= f.text_field :email %>
-
-    <%= f.submit%>
+<%= semantic_form_for @beta_user do |f| %>
+    <%= f.inputs do%>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :email %>
+    <%end%>
+    <%= f.actions do%>
+      <%= f.submit%>
+    <%end%>
 
 <% end %>
