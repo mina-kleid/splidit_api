@@ -1,11 +1,11 @@
 <%= simple_form_for @beta_user do |f| %>
 
-      <%= f.input :first_name, placeholder: "First name", label: false %>
-      <%= f.input :last_name, placeholder: "Last name", label: false %>
+      <%= f.input :first_name, placeholder: "Vorname", label: false %>
+      <%= f.input :last_name, placeholder: "Nachname", label: false %>
       <%= f.input :email, placeholder: "Email", label: false %>
 
 
-      <%= f.submit%>
+      <%= f.submit :Anmelden, class:'btn btn-primary'%>
 
 
 <% end %>
