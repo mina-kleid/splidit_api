@@ -14,7 +14,7 @@ class BetaUsersController < ActionController::Base
     @beta_user = BetaUser.new(permitted_params)
     if @beta_user.save
       mailchimp = Mailchimp::API.new(MAILCHIMP_API_KEY)
-      mailchimp.lists.subscribe(MAILCHIMP_LIST_ID, {email: @beta_user.email}, {first_name: @beta_user.first_name, last_name: @beta_user.last_name}, double_optin = false, send_welcome = false)
+      mailchimp.lists.subscribe(MAILCHIMP_LIST_ID, {email: @beta_user.email}, {FNAME: @beta_user.first_name, LNAME: @beta_user.last_name}, double_optin = false, send_welcome = false, update_existing = true)
       redirect_to success_beta_users_path
     else
       render :new
