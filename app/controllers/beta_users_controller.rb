@@ -15,23 +15,22 @@ class BetaUsersController < ActionController::Base
     if @beta_user.valid?
       mailchimp = Mailchimp::API.new(MAILCHIMP_API_KEY)
       begin
-        raise ""
         mailchimp.lists.subscribe(MAILCHIMP_LIST_ID, {email: @beta_user.email}, {FNAME: @beta_user.first_name, LNAME: @beta_user.last_name}, double_optin = false, send_welcome = false, update_existing = true)
         @beta_user.save
-        redirect_to success_beta_users_path
+        redirect_to success_beta_users_path and return
       rescue Mailchimp::Error => e
         if e.message.include?("is an invalid email address")
           @beta_user.errors.add(:email, "Invalid email address, please enter a valid email")
         else
           @beta_user.errors.add(:base, e.message)
         end
+          render :new and return
       rescue StandardError => e
         @beta_user.errors.add(:base, e.message)
-      ensure
-        render :new
+        render :new and return
       end
     else
-      render :new
+      render :new and return
     end
   end
 
