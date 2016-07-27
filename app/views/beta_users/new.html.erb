@@ -1,4 +1,7 @@
 <%= simple_form_for @beta_user do |f| %>
+      <%if @beta_user.errors[:base].any?%>
+        <%= f.error_notification message: "Something wrong has happened, we are giving it a look"%>
+      <%end%>
 
       <%= f.input :first_name, placeholder: "Vorname", label: false %>
       <%= f.input :last_name, placeholder: "Nachname", label: false %>
