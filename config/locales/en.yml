@@ -21,3 +21,8 @@
 
 en:
   hello: "Hello world"
+  beta_users:
+      register_button: "Register"
+      form_success_text: "Thanks for registering. We have sent you an email with further information about Splidit Beta program."
+      first_name : "First name"
+      last_name : "Last name"

@@ -3,12 +3,12 @@
         <%= f.error_notification message: "Something wrong has happened, we are giving it a look"%>
       <%end%>
 
-      <%= f.input :first_name, placeholder: "Vorname", label: false %>
-      <%= f.input :last_name, placeholder: "Nachname", label: false %>
+      <%= f.input :first_name, placeholder:"#{t('beta_users.first_name')}", label: false %>
+      <%= f.input :last_name, placeholder: "#{t('beta_users.last_name')}", label: false %>
       <%= f.input :email, placeholder: "Email", label: false %>
 
 
-      <%= f.submit :Anmelden, class:'btn btn-primary', style: 'position: absolute;left: 35%;'%>
+      <%= f.submit "#{t('beta_users.register_button')}", class:'btn btn-primary', style: 'position: absolute;left: 35%;'%>
 
 
 <% end %>

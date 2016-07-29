@@ -30,6 +30,7 @@ gem 'mailchimp-api', '~> 2.0', '>= 2.0.6'
 gem 'simple_form'
 gem 'sass-rails'
 gem 'bootstrap-sass'
+gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
 
 group :development, :test do
   gem 'rspec-rails'

@@ -3,7 +3,14 @@ require 'mailchimp'
 class BetaUsersController < ActionController::Base
 
   after_filter :allow_iframe
+  before_action :set_locale
+
   layout 'application'
+
+
+  def default_url_options(options={})
+    { locale: I18n.locale }
+  end
 
   def new
     @beta_user = BetaUser.new
@@ -41,6 +48,10 @@ class BetaUsersController < ActionController::Base
 
   private
 
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
 
   def permitted_params
     params.require(:beta_user).permit(:first_name, :last_name, :email)

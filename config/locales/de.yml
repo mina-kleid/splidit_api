@@ -1,0 +1,6 @@
+de:
+  beta_users:
+    register_button: "Anmelden"
+    form_success_text: "Vielen Dank für deine Anmeldung. Wir haben dir eine E-Mail mit den weiteren Informationen zum Splidit Beta Programm geschickt."
+    first_name : "Vorname"
+    last_name : "Nachname"
